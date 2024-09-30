@@ -82,14 +82,29 @@
     $ColumnswithNegativeTotals = [14, 15, 16, 17, 18, 19, 20, 21];
     $previous_monitor_year = "";
 
+    // Path to the file containing the database credentials
+    $credentialsFile = 'C:\\inetpub\\wwwroot\\paystubs_resources\\db.info';  // Change this to the actual path
+
+    // Read and parse the credentials file
+    if (file_exists($credentialsFile)) {
+        $dbCredentials = parse_ini_file($credentialsFile);
+
+        // Assign credentials to variables
+        $dbUsername = $dbCredentials['username'];
+        $dbPassword = $dbCredentials['password'];
+
+    } else {
+        die('Error: Credentials file not found.');
+    }
+
     // Create a NumberFormatter instance for currency
     $locale = 'en_US';  // You can specify different locales (e.g., 'de_DE' for Germany, 'fr_FR' for France)
     $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
     // PDO database connection
     $dsn = 'mysql:host=localhost;dbname=earnings';
-    $username = 'dannlori';
-    $password_db = '1MTrusted!';
+    $username = $dbUsername;
+    $password_db = $dbPassword;
     $options = array(
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     );
