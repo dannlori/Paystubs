@@ -52,7 +52,8 @@
         thead th {
             position: sticky;
             top: 0; /* Fix the header at the top */
-            background-color: #f8f9fa; /* Add background to prevent overlap */
+            /* background-color: #f8f9fa; /* Add background to prevent overlap */
+            background-color: coral;
             z-index: 1; /* Ensure it stays on top */
         }
         .message {
@@ -391,7 +392,7 @@
                         // Dynamically fetch and display column names as table headers
                         $columnCount = $stmt->columnCount(); // Get the number of columns
                         ?>
-                        <thead class='table-light'>
+                        <thead class='table-dark'>
                             <tr> <!-- Start table header row -->
                             <?php
                                 for ($i = 0; $i < $columnCount; $i++) {
