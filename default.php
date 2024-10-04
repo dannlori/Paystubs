@@ -1,3 +1,16 @@
+<?php
+// Check if a session is not already started before calling session_start
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
+
+// Check if the user is authenticated
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,7 +80,21 @@
     </style>
 </head>
 <body>
-    <p class="text-center h1">Paystubs</p>
+    <!-- Header section with centered text and logout button -->
+    <header class="bg-light py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Centered "Paystubs" text -->
+                <div class="flex-grow-1 text-center">
+                    <h1 class="mb-0">Paystubs</h1>
+                </div>
+                <!-- Logout button aligned to the right -->
+                <div>
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
 <?php
     // Defining Variables
     $directory = 'c:\\paystubs'; // Directory containing PDF files
