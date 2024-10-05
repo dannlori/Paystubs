@@ -78,6 +78,10 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
         .message.fade-out {
             opacity: 0; /* Fully transparent */
         }
+
+        #totals_cells {
+            background-color: lightgreen";
+        }
     </style>
 </head>
 <body>
@@ -388,7 +392,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
             HSA_FE,
             MD25F,
             VIS_F
-            FROM paystubs";
+            FROM paystubs
+            ORDER BY Pay_Date DESC";
             
         $stmt = $pdo->prepare($sql); // Prepare the SQL query
         $stmt->execute(); // Execute the query
@@ -434,6 +439,30 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         </thead> <!-- End header row -->
                         <!-- Loop through each row of results and display each cell in the table -->
                         <tbody>
+                            <tr>
+                                <td style="background-color: lightgreen"><strong></strong>LOC</td>
+                                <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
+                                <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
+                                <?php
+                                $ColumnNum = 1;
+                                foreach ($totals as $total) {
+                                    if (in_array($ColumnNum, $ColumnsWithoutDollarSignsTotals)) {
+                                ?>
+                                        <td style="background-color: lightgreen"><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
+                                    <?php
+                                    } elseif (in_array($ColumnNum, $ColumnswithNegativeTotals)) {
+                                    ?>
+                                        <td class="text-danger" style="background-color: lightgreen"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <td style="background-color: lightgreen"><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                <?php
+                                    }
+                                    $ColumnNum++;
+                                }
+                                ?>            
+                            </tr>
                         <?php
                             // Assuming $results is your array of rows, and column 2 is the paydate
                             foreach ($results as $row) {
@@ -485,23 +514,23 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         <!-- Table footer for totals -->
                         <tfoot>
                             <tr>
-                                <td><strong></strong>LOC</td>
-                                <td><strong></strong>TOTALS</td>
-                                <td><strong><?=$averageRate?></td>
+                                <td style="background-color: lightgreen"><strong></strong>LOC</td>
+                                <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
+                                <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
                                 <?php
                                 $ColumnNum = 1;
                                 foreach ($totals as $total) {
                                     if (in_array($ColumnNum, $ColumnsWithoutDollarSignsTotals)) {
                                 ?>
-                                        <td><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
+                                        <td style="background-color: lightgreen"><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
                                     <?php
                                     } elseif (in_array($ColumnNum, $ColumnswithNegativeTotals)) {
                                     ?>
-                                        <td class="text-danger"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                        <td class="text-danger" style="background-color: lightgreen"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
                                     <?php
                                     } else {
                                     ?>
-                                        <td><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                        <td style="background-color: lightgreen"><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
                                 <?php
                                     }
                                     $ColumnNum++;
