@@ -24,6 +24,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
             margin: 0;
             padding: 0;
             height: 100%;
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Adjust colors */
         }
 
         .fullscreen-div {

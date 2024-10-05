@@ -20,19 +20,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h2>Please enter the password</h2>
-    <?php if (isset($error)) : ?>
-        <p style="color: red;"><?php echo $error; ?></p>
-    <?php endif; ?>
-    <form action="login.php" method="POST">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Submit</button>
-    </form>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+        <style>
+            body {
+               background: linear-gradient(to right, #ff7e5f, #feb47b); /* Adjust colors */
+            }
+            #password {
+                border-radius: 10px;  /* Adjust the value for roundness */
+                padding: 5px;
+                border: 1px solid #ccc;
+                width: 150px;  /* Adjust width as needed */
+                font-size: 12px;
+            }
+            #submit-button {
+                border-radius: 8px;  /* Adjust the value for roundness */
+                padding: 6px 12px;
+                border: none;
+                background-color: #4CAF50;  /* Button color */
+                color: white;
+                font-size: 12px;
+                cursor: pointer;
+            }
+
+            #submit-button:hover {
+                background-color: #45a049;  /* Darker shade on hover */
+            }
+        </style>
+    </head>
+    <body>
+        <h2>
+            <center>Password required to access site</center>
+        </h2>
+        <p>
+            <center>
+                <?php if (isset($error)) : ?>
+                    <p style="color: red;"><?php echo $error; ?></p>
+                <?php endif; ?>
+                <form action="login.php" method="POST">
+                    <label for="password"><b>Password:</b></label>
+                    <input type="password" id="password" name="password" required autofocus placeholder="Enter Password">
+                    <button type="submit" id="submit-button">Submit</button>
+                </form>
+            </center>
+        </p>
+    </body>
 </html>
