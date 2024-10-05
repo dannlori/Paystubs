@@ -356,7 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="row align-items-center justify-content-between">
                 <div class="col-3">
                     <select id="yearDropdown" onchange="selectYear()">
-                        <option value="NOTHING">Select Year</option>
+                        <option value="">Select Year</option>
                         <option value="all">ALL YEARS</option>
                     </select>
                 </div> 
