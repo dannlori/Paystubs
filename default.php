@@ -10,6 +10,16 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header('Location: login.php');
     exit;
 }
+
+// Check if the form has been submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve the submitted year
+    $submittedYear = $_POST['selectedYear'] ?? '';
+    $showData = 1;
+} else {
+    $submittedYear = "";
+    $showData = 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +72,6 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
             width: max-content;
         }
 
-        /* Sticky header row */
         thead th {
             position: sticky;
             top: 0; /* Fix the header at the top */
@@ -70,6 +79,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
             background-color: coral;
             z-index: 1; /* Ensure it stays on top */
         }
+
         .message {
             transition: opacity 1s ease; /* 1 second fade out effect */
             opacity: 1; /* Fully visible */
@@ -97,67 +107,16 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
             opacity: 0.85; /* Semi-transparent */
         }
     </style>
+
+    <form id="yearForm" method="POST" action="">
+        <input type="hidden" name="selectedYear" id="hiddenYearInput" value="">
+    </form>
 </head>
 <body>
-    <!-- Header section with centered text and logout button -->
-    <header class="bg-light py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <!-- Centered "Paystubs" text -->
-                <div class="flex-grow-1 text-center">
-                    <h1 class="mb-0">Paystubs</h1>
-                </div>
-                <!-- Logout button aligned to the right -->
-                <div>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
-                </div>
-            </div>
-        </div>
-    </header>
+    
 <?php
     // Defining Variables
-    $directory = 'c:\\paystubs'; // Directory containing PDF files
-    $processedDirectory = $directory . '\\processed\\'; // Append the 'processed' directory
-    // Define the path for the not processed directory
-    $notProcessedDirectory = $directory . '\\notprocessed\\'; // Change this to your actual path
-
-    $popplerExe = "C:\\poppler\\pdftotext.exe ";
-    $noFiles = 0;
-    $ColumnsWithoutDollarSignsCells = [1, 2, 4, 5, 6, 7];
-    $ColumnsWithoutDollarSignsTotals = [1, 2, 3, 4];
-    $ColumnswithNegativeValues = [17, 18, 19, 20, 21, 22, 23, 24];
-    $ColumnswithNegativeTotals = [14, 15, 16, 17, 18, 19, 20, 21];
-    $previous_monitor_year = "";
-
-    // Path to the file containing the database credentials
-    $credentialsFile = 'C:\\inetpub\\wwwroot\\paystubs_resources\\db.info';  // Change this to the actual path
-
-    // Read and parse the credentials file
-    if (file_exists($credentialsFile)) {
-        $dbCredentials = parse_ini_file($credentialsFile);
-
-        // Assign credentials to variables
-        $dbUsername = $dbCredentials['username'];
-        $dbPassword = $dbCredentials['password'];
-
-    } else {
-        die('Error: Credentials file not found.');
-    }
-
-    // Create a NumberFormatter instance for currency
-    $locale = 'en_US';  // You can specify different locales (e.g., 'de_DE' for Germany, 'fr_FR' for France)
-    $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-
-    // PDO database connection
-    $dsn = 'mysql:host=localhost;dbname=earnings';
-    $username = $dbUsername;
-    $password_db = $dbPassword;
-    $options = array(
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    );
-
-    $pdo = new PDO($dsn, $username, $password_db, $options);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    require_once "variables.inc.php";
 
     // Get the total number of PDF files
     $pdfFiles = glob("$directory\\*.pdf");
@@ -379,207 +338,258 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     ]; 
 
     // Get data from the table
-    try {
-        // Query to select all records from the table
-        $sql = "SELECT 
-            CO, 
-            Pay_Date,  
-            Rate,
-            Reg, 
-            OT, 
-            PTO, 
-            HOL,  
-            Gross, 
-            Net,
-            Roth,
-            Bonus, 
-            Bonus2,
-            Miles, 
-            Leads, 
-            Cell,
-            401KPC, 
-            SS,
-            Med, 
-            Fed,
-            State,
-            DPPO_F,
-            HSA_FE,
-            MD25F,
-            VIS_F
-            FROM paystubs
-            ORDER BY Pay_Date DESC";
-            
-        $stmt = $pdo->prepare($sql); // Prepare the SQL query
-        $stmt->execute(); // Execute the query
-    
-        // Fetch all results as an associative array
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Query to select all records from the table
+    $sql = "SELECT DISTINCT YEAR(Pay_Date) AS year 
+        FROM paystubs
+        ORDER BY year";
         
-        // Loop through each row of results and accumulate totals
-        foreach ($results as $row) {
-            foreach ($totals as $column => $total) {
-                // Add the value from the current row to the total, assuming these columns are numeric
-                if (isset($row[$column])) {
-                    $totals[$column] += (float) str_replace("$","",$row[$column]);
-                }
-            }
-        }
+    $stmt = $pdo->prepare($sql); // Prepare the SQL query
+    $stmt->execute(); // Execute the query
 
-        // START DISPLAY OF TABLE
-
-        // If there are results, display them in an HTML table
-        if (count($results) > 0) {
-            $numRows = count($results); // Get the number of rows in the array
-            // Start the HTML table with Bootstrap table classes and custom CSS
-            ?>
-            <div class='container-fluid d-flex justify-content-center'>
-                <div class='table-wrapper'>
-                    <table class='table table-sm table-striped table-bordered table-hover'>
-                        <?php
-                        // Dynamically fetch and display column names as table headers
-                        $columnCount = $stmt->columnCount(); // Get the number of columns
-                        ?>
-                        <thead class='table-dark'>
-                            <tr> <!-- Start table header row -->
-                            <?php
-                                for ($i = 0; $i < $columnCount; $i++) {
-                                    $columnMeta = $stmt->getColumnMeta($i); // Get column metadata
-                            ?>
-                                    <th><?=htmlspecialchars($columnMeta['name'])?></th> <!-- Print column name safely -->
-                            <?php
-                                }
-                            ?>
-                            </tr>
-                        </thead> <!-- End header row -->
-                        <!-- Loop through each row of results and display each cell in the table -->
-                        <tbody>
-                            <tr>
-                                <td style="background-color: lightgreen"><strong></strong>LOC</td>
-                                <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
-                                <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
-                                <?php
-                                $ColumnNum = 1;
-                                foreach ($totals as $total) {
-                                    if (in_array($ColumnNum, $ColumnsWithoutDollarSignsTotals)) {
-                                ?>
-                                        <td style="background-color: lightgreen"><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
-                                    <?php
-                                    } elseif (in_array($ColumnNum, $ColumnswithNegativeTotals)) {
-                                    ?>
-                                        <td class="text-danger" style="background-color: lightgreen"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <td style="background-color: lightgreen"><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
-                                <?php
-                                    }
-                                    $ColumnNum++;
-                                }
-                                ?>            
-                            </tr>
-                        <?php
-                            // Assuming $results is your array of rows, and column 2 is the paydate
-                            foreach ($results as $row) {
-                                $monitor_year = explode('-', $row["Pay_Date"])[0];
-                                if ($previous_monitor_year != $monitor_year) {
-                                ?>
-                                    <tr> <!-- Start a new row -->
-                                        <td colspan='<?=$columnCount?>' class='fw-bold'><?=$monitor_year?></td>
-                                    </tr> <!--Start a new row -->
-                                <?php
-                                }
-                                ?>
-                                <tr> <!-- Start a new row -->
-                                <?php
-                                    $ColumnNum = 1; // Initialize column counter
-                                    foreach ($row as $cell) {
-                                        // If we're on the second column (paydate)
-                                        if ($ColumnNum == 2) {
-                                            // Try to format the paydate using DateTime or another method
-                                            $dateTime = new DateTime($cell);
-                                            $formattedDate = $dateTime->format('m-d-Y'); // Format as month-day-year (US format)
-                                ?>
-                                            <td><?=htmlspecialchars($formattedDate)?></td>
-                                        <?php
-                                        // If this column is not supposed to have a dollar sign (based on your logic)
-                                        } elseif (in_array($ColumnNum, $ColumnsWithoutDollarSignsCells)) {
-                                        ?>
-                                            <td><?=htmlspecialchars($cell)?></td> <!-- Print each cell safely -->
-                                        <?php
-                                        } elseif (in_array($ColumnNum, $ColumnswithNegativeValues)) {
-                                        ?>
-                                            <td class="text-danger">-<?=$formatter->formatCurrency($cell, 'USD')?></td> <!-- Print each cell safely -->
-                                        <?php
-                                        // For columns that require currency formatting
-                                        } else {
-                                        ?>
-                                            <td><?=$formatter->formatCurrency($cell, 'USD')?></td> <!-- Print currency formatted cell-->
-                                    <?php
-                                        }
-                                        $ColumnNum++; // Move to the next column
-                                    }
-                                    ?>            
-                                    </tr> <!-- Close the row -->
-                            <?php
-                                $previous_monitor_year = $monitor_year;
-                            }
-                            ?>
-                        </tbody>
-                        <!-- Table footer for totals -->
-                        <tfoot>
-                            <tr>
-                                <td colspan="24">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="background-color: lightgreen"><strong></strong>LOC</td>
-                                <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
-                                <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
-                                <?php
-                                $ColumnNum = 1;
-                                foreach ($totals as $total) {
-                                    if (in_array($ColumnNum, $ColumnsWithoutDollarSignsTotals)) {
-                                ?>
-                                        <td style="background-color: lightgreen"><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
-                                    <?php
-                                    } elseif (in_array($ColumnNum, $ColumnswithNegativeTotals)) {
-                                    ?>
-                                        <td class="text-danger" style="background-color: lightgreen"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <td style="background-color: lightgreen"><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
-                                <?php
-                                    }
-                                    $ColumnNum++;
-                                }
-                                ?>            
-                            </tr>
-                        </tfoot>
-                    </table> <!-- End the table -->
-                <?php
-                } else {
-                ?>
-                    <div class='alert alert-warning text-center' role='alert'>No records found. Add some data!</div> <!-- // Display message if no records are found -->
-                <?php
-                }
-                ?>
+    // Fetch all results as an associative array
+    $uniqueYears = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
+    ?>
+    <!-- Header section with centered text and logout button -->
+    <header class="bg-light py-2">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-3">
+                    <select id="yearDropdown" onchange="selectYear()">
+                        <option value="NOTHING">Select Year</option>
+                        <option value="all">ALL YEARS</option>
+                    </select>
+                </div> 
+                <div class="col-3">
+                    <h1 class="mb-0"><?=$submittedYear?> Paystubs</h1>
+                </div>
+                <!-- Logout button aligned to the right -->
+                <div class="col-3">
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
             </div>
         </div>
-        <?php    
-        } catch (PDOException $e) {
-            // Handle any potential exceptions/errors
-        ?>
-            <div class='alert alert-danger' role='alert'>Error:<?=$e->getMessage()?></div>
-        <?php
-        }
+    </header>
+    
+    <?php
 
-        $pdo = null; // Close the database connection
+    //ONLY SHOW IF DATE IS SELECTED
+    if ($showData == 1) {
+        try {
+            // Query to select all records from the table
+            $sql = "SELECT 
+                CO, 
+                Pay_Date,  
+                Rate,
+                Reg, 
+                OT, 
+                PTO, 
+                HOL,  
+                Gross, 
+                Net,
+                Roth,
+                Bonus, 
+                Bonus2,
+                Miles, 
+                Leads, 
+                Cell,
+                401KPC, 
+                SS,
+                Med, 
+                Fed,
+                State,
+                DPPO_F,
+                HSA_FE,
+                MD25F,
+                VIS_F
+                FROM paystubs
+                Where YEAR(Pay_Date) = $submittedYear
+                ORDER BY Pay_Date DESC";
+                
+            $stmt = $pdo->prepare($sql); // Prepare the SQL query
+            $stmt->execute(); // Execute the query
 
-        if ($noFiles == 1) {
-        ?>
-            <p class='h1 custom-no-files'>No files found in the <?=$directory?> to process.</p><br/>
-        <?php
-        }
+            // Fetch all results as an associative array
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Loop through each row of results and accumulate totals
+            foreach ($results as $row) {
+                foreach ($totals as $column => $total) {
+                    // Add the value from the current row to the total, assuming these columns are numeric
+                    if (isset($row[$column])) {
+                        $totals[$column] += (float) str_replace("$","",$row[$column]);
+                    }
+                }
+            }
+
+            // START DISPLAY OF TABLE
+
+            // If there are results, display them in an HTML table
+            if (count($results) > 0) {
+                $numRows = count($results); // Get the number of rows in the array
+                // Start the HTML table with Bootstrap table classes and custom CSS
+                ?>
+                <div class='container-fluid d-flex justify-content-center'>
+                    <div class='table-wrapper'>
+                        <table class='table table-sm table-striped table-bordered table-hover'>
+                            <?php
+                            // Dynamically fetch and display column names as table headers
+                            $columnCount = $stmt->columnCount(); // Get the number of columns
+                            ?>
+                            <thead class='table-dark'>
+                                <tr> <!-- Start table header row -->
+                                <?php
+                                    for ($i = 0; $i < $columnCount; $i++) {
+                                        $columnMeta = $stmt->getColumnMeta($i); // Get column metadata
+                                ?>
+                                        <th scope="col"><?=htmlspecialchars($columnMeta['name'])?></th> <!-- Print column name safely -->
+                                <?php
+                                    }
+                                ?>
+                                </tr>
+                            </thead> <!-- End header row -->
+                            <!-- Loop through each row of results and display each cell in the table -->
+                            <tbody>
+                                <tr>
+                                    <td style="background-color: lightgreen"><strong></strong>LOC</td>
+                                    <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
+                                    <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
+                                    <?php
+                                    $ColumnNum = 1;
+                                    foreach ($totals as $total) {
+                                        if (in_array($ColumnNum, $ColumnsWithoutDollarSignsTotals)) {
+                                    ?>
+                                            <td style="background-color: lightgreen"><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
+                                        <?php
+                                        } elseif (in_array($ColumnNum, $ColumnswithNegativeTotals)) {
+                                        ?>
+                                            <td class="text-danger" style="background-color: lightgreen"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <td style="background-color: lightgreen"><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                    <?php
+                                        }
+                                        $ColumnNum++;
+                                    }
+                                    ?>            
+                                </tr>
+                            <?php
+                                // Assuming $results is your array of rows, and column 2 is the paydate
+                                foreach ($results as $row) {
+                                    $monitor_year = explode('-', $row["Pay_Date"])[0];
+                                    if ($previous_monitor_year != $monitor_year) {
+                                    ?>
+                                        <tr> <!-- Start a new row -->
+                                            <td colspan='<?=$columnCount?>' class='fw-bold'><?=$monitor_year?></td>
+                                        </tr> <!--Start a new row -->
+                                    <?php
+                                    }
+                                    ?>
+                                    <tr> <!-- Start a new row -->
+                                    <?php
+                                        $ColumnNum = 1; // Initialize column counter
+                                        foreach ($row as $cell) {
+                                            // If we're on the second column (paydate)
+                                            if ($ColumnNum == 2) {
+                                                // Try to format the paydate using DateTime or another method
+                                                $dateTime = new DateTime($cell);
+                                                $formattedDate = $dateTime->format('m-d-Y'); // Format as month-day-year (US format)
+                                    ?>
+                                                <td><?=htmlspecialchars($formattedDate)?></td>
+                                            <?php
+                                            // If this column is not supposed to have a dollar sign (based on your logic)
+                                            } elseif (in_array($ColumnNum, $ColumnsWithoutDollarSignsCells)) {
+                                            ?>
+                                                <td><?=htmlspecialchars($cell)?></td> <!-- Print each cell safely -->
+                                            <?php
+                                            } elseif (in_array($ColumnNum, $ColumnswithNegativeValues)) {
+                                            ?>
+                                                <td class="text-danger">-<?=$formatter->formatCurrency($cell, 'USD')?></td> <!-- Print each cell safely -->
+                                            <?php
+                                            // For columns that require currency formatting
+                                            } else {
+                                            ?>
+                                                <td><?=$formatter->formatCurrency($cell, 'USD')?></td> <!-- Print currency formatted cell-->
+                                        <?php
+                                            }
+                                            $ColumnNum++; // Move to the next column
+                                        }
+                                        ?>            
+                                        </tr> <!-- Close the row -->
+                                <?php
+                                    $previous_monitor_year = $monitor_year;
+                                }
+                                ?>
+                            </tbody>
+                            <!-- Table footer for totals -->
+                            <tfoot>
+                                <tr>
+                                    <td colspan="<?=$columnCount?>">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color: lightgreen"><strong></strong>LOC</td>
+                                    <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
+                                    <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
+                                    <?php
+                                    $ColumnNum = 1;
+                                    foreach ($totals as $total) {
+                                        if (in_array($ColumnNum, $ColumnsWithoutDollarSignsTotals)) {
+                                    ?>
+                                            <td style="background-color: lightgreen"><strong><?=number_format($total, 2)?></strong></td> <!-- Format the totals as currency -->
+                                        <?php
+                                        } elseif (in_array($ColumnNum, $ColumnswithNegativeTotals)) {
+                                        ?>
+                                            <td class="text-danger" style="background-color: lightgreen"><strong>-<?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <td style="background-color: lightgreen"><strong><?=$formatter->formatCurrency($total, 'USD')?></strong></td> <!-- Format the totals as currency -->
+                                    <?php
+                                        }
+                                        $ColumnNum++;
+                                    }
+                                    ?>            
+                                </tr>
+                            </tfoot>
+                        </table> <!-- End the table -->
+                    <?php
+                    } else {
+                    ?>
+                        <div class='alert alert-warning text-center' role='alert'>No records found. Add some data!</div> <!-- // Display message if no records are found -->
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php    
+            } catch (PDOException $e) {
+                // Handle any potential exceptions/errors
+            ?>
+                <div class='alert alert-danger' role='alert'>Error:<?=$e->getMessage()?></div>
+            <?php
+            }
+    } else {
+    ?>
+        <div class="container container-fluid">
+            <div class="row">
+                <div class="col fw-bold py-3">
+                    SELECT ^ TO VIEW
+                </div>
+            </div>
+
+        </div>
+    <?php
+    }
+
+    $pdo = null; // Close the database connection
+    /*
+    if ($noFiles == 1) {
+    ?>
+        <p class='h1 custom-no-files'>No files found in the <?=$directory?> to process.</p><br/>
+    <?php
+    }
+    */
         // Function to extract a value using a regular expression
         function extractValue($text, $pattern) {
             if (preg_match($pattern, $text, $match)) {
@@ -682,6 +692,32 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                     uploadForm.style.left = e.clientX - offsetX + "px";
                     uploadForm.style.top = e.clientY - offsetY + "px";
                     uploadForm.style.position = "absolute";
+                }
+            }
+
+            // PHP variable containing unique years
+            const uniqueYears = <?php echo json_encode($uniqueYears); ?>;
+
+            // Populate the dropdown
+            const dropdown = document.getElementById('yearDropdown');
+            uniqueYears.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                dropdown.appendChild(option);
+            });
+
+            function selectYear() {
+                const selectedYear = document.getElementById("yearDropdown").value;
+                if (selectedYear === 'all') {
+                    // Redirect to all.php if "All" is selected
+                    window.location.href = 'all.php';
+                } else if (selectedYear) {
+                    // Set the hidden input's value
+                    document.getElementById('hiddenYearInput').value = selectedYear;
+
+                    // Submit the form
+                    document.getElementById('yearForm').submit();
                 }
             }
         </script>
