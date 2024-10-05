@@ -79,8 +79,22 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
             opacity: 0; /* Fully transparent */
         }
 
-        #totals_cells {
-            background-color: lightgreen";
+        /* Floating div in the top right corner */
+        .floating-upload {
+            position: fixed;
+            top: 30px;
+            right: 10px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 350px;
+            height: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: move;
+            z-index: 1000;
+            resize: none; /* Prevent resizing */
+            overflow: hidden; /* Prevent scrollbars */
+            opacity: 0.85; /* Semi-transparent */
         }
     </style>
 </head>
@@ -514,6 +528,9 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                         <!-- Table footer for totals -->
                         <tfoot>
                             <tr>
+                                <td colspan="24">&nbsp;</td>
+                            </tr>
+                            <tr>
                                 <td style="background-color: lightgreen"><strong></strong>LOC</td>
                                 <td style="background-color: lightgreen"><strong></strong>TOTALS</td>
                                 <td style="background-color: lightgreen"><strong><?=$averageRate?></td>
@@ -573,9 +590,14 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                 return 0.0; // Set default value if not found
             }
         }
-        // Include the file upload .inc file at the bottom 
-        include 'submitFiles.inc'; 
         ?>
+        <div id="uploadForm" class="floating-upload">
+            <?php
+            // Include the file upload .inc file at the bottom 
+            include 'submitFiles.inc'; 
+            ?>
+        </div>
+
         <!-- Include Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
@@ -635,6 +657,33 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
                     })(i);
                 }
             };
+
+            // Make the upload form draggable
+            const uploadForm = document.getElementById("uploadForm");
+
+            let isMouseDown = false;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            uploadForm.addEventListener("mousedown", function(e) {
+                isMouseDown = true;
+                offsetX = e.clientX - uploadForm.getBoundingClientRect().left;
+                offsetY = e.clientY - uploadForm.getBoundingClientRect().top;
+                document.addEventListener("mousemove", moveElement);
+            });
+
+            document.addEventListener("mouseup", function() {
+                isMouseDown = false;
+                document.removeEventListener("mousemove", moveElement);
+            });
+
+            function moveElement(e) {
+                if (isMouseDown) {
+                    uploadForm.style.left = e.clientX - offsetX + "px";
+                    uploadForm.style.top = e.clientY - offsetY + "px";
+                    uploadForm.style.position = "absolute";
+                }
+            }
         </script>
     </body>
 </html>

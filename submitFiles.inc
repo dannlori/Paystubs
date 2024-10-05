@@ -2,7 +2,7 @@
 <div id="drop-area">
     <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" id="fileElem" multiple accept="application/pdf" onchange="handleFiles(this.files)">
-        <label class="button" for="fileElem">Drag and Drop Files Here<br/>Click to select PDF files</label>
+        <label class="button" for="fileElem" style="font-size: 12px; font-weight: bold;">Drag and Drop Files Here<br/>OR<br/>Click to select PDF files</label>
     </form>
 </div>
 
