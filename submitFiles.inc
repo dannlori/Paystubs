@@ -5,7 +5,7 @@
         <div id="drop-area">
             <form id="uploadForm" enctype="multipart/form-data">
                 <input type="file" id="fileElem" multiple accept="application/pdf" onchange="handleFiles(this.files)">
-                <label class="button" for="fileElem" style="font-size: 12px; font-weight: bold;">Drag and Drop Files Here<br/>OR<br/>Click to select PDF files<br/>File Format: YYYY-MM-DD.pdf</label>
+                <label class="button" for="fileElem" style="font-size: 10px; font-weight: bold;">Drag and Drop Files Here<br/>OR<br/>Click to select PDF files<br/>File Format: YYYY-MM-DD.pdf</label>
             </form>
         </div>
 
@@ -49,7 +49,7 @@
             }
 
             function uploadFile(file) {
-                let url = 'upload.php';  // The PHP file that handles the upload
+                let url = 'processFiles.php';  // The PHP file that handles the upload
                 let formData = new FormData();
                 formData.append('fileToUpload', file);
 
@@ -73,7 +73,7 @@
             function previewFile(file) {
                 let gallery = document.getElementById('gallery');
                 let filePreview = document.createElement('p');
-                filePreview.textContent = `Selected file: ${file.name}`;
+                filePreview.textContent = `Uploaded file: ${file.name}`;
                 gallery.appendChild(filePreview);
             }
         </script>
