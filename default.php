@@ -348,7 +348,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Fetch all results as an associative array
     $uniqueYears = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    
+    if ($uniqueYears) {
+        $dataInDB = "";
+    } else {
+        $dataInDB = "<p><b><center>No Files in Database. Add some files.</center></b></p>";
+    }
     ?>
     <!-- Header section with centered text and logout button -->
     <header class="bg-light py-2">
@@ -573,8 +577,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
         <div class="container container-fluid">
             <div class="row">
-                <div class="col fw-bold py-3">
+                <div class="col-3 fw-bold py-3">
                     SELECT ^ TO VIEW
+                </div>
+                <div class="col-3 fw-bold py-3">
+                    <?=$dataInDB?>
                 </div>
             </div>
 
