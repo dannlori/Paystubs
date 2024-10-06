@@ -50,4 +50,28 @@ if ($totalFiles == 0) {
     $noFiles = 1;
     //exit;
 }
-?>
+
+// Initialize an array to hold totals for each numeric column
+$totals = [
+    'Reg' => 0,
+    'OT' => 0,
+    'PTO' => 0,
+    'HOL' => 0,
+    'Gross' => 0,
+    'Net' => 0,
+    'Roth' => 0,
+    'Bonus' => 0,
+    'Bonus2' => 0,
+    'Miles' => 0,
+    'Leads' => 0,
+    'Cell' => 0,
+    '401KPC' => 0,
+    'SS' => 0,
+    'Med' => 0,
+    'Fed' => 0,
+    'State' => 0,
+    'DPPO_F' => 0,
+    'HSA_FE' => 0,
+    'MD25F' => 0,
+    'VIS_F' => 0
+]; 

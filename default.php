@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Floating div in the top right corner */
         .floating-upload {
             position: fixed;
-            top: 30px;
+            top: 60px;
             right: 10px;
             background-color: white;
             border: 1px solid #ccc;
@@ -297,45 +297,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $destination = $processedDirectory . $justfilename;
 
         if (rename($source, $destination)) {
-?>
+        ?>
             <div class="message alert alert-success">
                 <?=$justfilename?> moved from <?=dirname($source)?>  to <?=$processedDirectory?> successfully!<br/>
             </div>
 
-<?php
+        <?php
         } else {
-?>
+        ?>
             <div class="message alert alert-danger">
                 Failed to move the <?=$justfilename?> from <?=dirname($source)?> to <?=$processedDirectory?><br/>
             </div>
-<?php
+        <?php
         }
     }
-
-    // Initialize an array to hold totals for each numeric column
-    $totals = [
-        'Reg' => 0,
-        'OT' => 0,
-        'PTO' => 0,
-        'HOL' => 0,
-        'Gross' => 0,
-        'Net' => 0,
-        'Roth' => 0,
-        'Bonus' => 0,
-        'Bonus2' => 0,
-        'Miles' => 0,
-        'Leads' => 0,
-        'Cell' => 0,
-        '401KPC' => 0,
-        'SS' => 0,
-        'Med' => 0,
-        'Fed' => 0,
-        'State' => 0,
-        'DPPO_F' => 0,
-        'HSA_FE' => 0,
-        'MD25F' => 0,
-        'VIS_F' => 0
-    ]; 
 
     // Get data from the table
     // Query to select all records from the table
@@ -346,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare($sql); // Prepare the SQL query
     $stmt->execute(); // Execute the query
 
-    // Fetch all results as an associative array
+    // Fetch all results as an associative array to detect if there is anything in the database
     $uniqueYears = $stmt->fetchAll(PDO::FETCH_COLUMN);
     if ($uniqueYears) {
         $dataInDB = "";
@@ -354,8 +329,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $dataInDB = "<p><b><center>No Files in Database. Add some files.</center></b></p>";
     }
     ?>
-    <!-- Header section with centered text and logout button -->
-    <header class="bg-light py-2">
+    <!-- Header section with dropdown, centered text and logout button -->
+    <header class="bg-light py-1">
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-3">
@@ -376,7 +351,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </header>
     
     <?php
-
     //ONLY SHOW IF DATE IS SELECTED
     if ($showData == 1) {
         try {
@@ -590,143 +564,137 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $pdo = null; // Close the database connection
-    /*
-    if ($noFiles == 1) {
-    ?>
-        <p class='h1 custom-no-files'>No files found in the <?=$directory?> to process.</p><br/>
-    <?php
+
+    // Function to extract a value using a regular expression
+    function extractValue($text, $pattern) {
+        if (preg_match($pattern, $text, $match)) {
+            // Remove commas from the matched value
+            $number = str_replace(',', '', $match[1]);
+            return floatval($number);
+        } else {
+            return 0.0; // Set default value if not found
+        }
     }
-    */
-        // Function to extract a value using a regular expression
-        function extractValue($text, $pattern) {
-            if (preg_match($pattern, $text, $match)) {
-                // Remove commas from the matched value
-                $number = str_replace(',', '', $match[1]);
-                return floatval($number);
-            } else {
-                return 0.0; // Set default value if not found
+    ?>
+    <div id="uploadForm" class="floating-upload">
+        <?php
+        // Include the file upload .inc file at the bottom 
+        include 'submitFiles.inc'; 
+        ?>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch total files from PHP (make sure this is properly defined in PHP)
+            // let totalFiles = <?php echo $totalFiles; ?>;
+
+            // Check if totalFiles is defined and greater than 0
+            if (typeof totalFiles !== 'undefined' && totalFiles > 0) {
+                let index = 0;
+
+                // Initialize toast with autohide set to false
+                let progressToast = new bootstrap.Toast(document.getElementById('progressToast'), {
+                    autohide: false
+                });
+                progressToast.show();
+
+                // Function to update progress
+                function updateProgress() {
+                    if (index < totalFiles) {
+                        index++;
+                        let progress = Math.floor((index / totalFiles) * 100);
+                        let progressBar = document.getElementById('progressBar');
+                        progressBar.style.width = progress + '%';
+                        progressBar.setAttribute('aria-valuenow', progress);
+                        progressBar.innerHTML = progress + '%';
+                    } else {
+                        clearInterval(progressInterval);  // Stop updating once completed
+                    }
+                }
+
+                // Update progress every 100ms (simulate processing delay)
+                let progressInterval = setInterval(updateProgress, 100);
+            }
+        });   
+
+        <!-- JavaScript to fade out all messages one by one -->
+
+        window.onload = function() {
+            var messages = document.getElementsByClassName('message');
+            var delay = 0; // Initial delay
+
+            for (var i = 0; i < messages.length; i++) {
+                (function(index) {
+                    // Fade out the message after a delay
+                    setTimeout(function() {
+                        messages[index].classList.add('fade-out'); // Add the fade-out class
+                        
+                        // Set display to none after fade-out is complete
+                        setTimeout(function() {
+                            messages[index].style.display = 'none'; // Remove the message from display
+                        }, 1000); // Match this duration to the CSS transition duration (1 second)
+                    }, delay);
+                    delay += 2000; // Increment delay by 3 seconds for each message
+                })(i);
+            }
+        };
+
+        // Make the upload form draggable
+        const uploadForm = document.getElementById("uploadForm");
+
+        let isMouseDown = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        uploadForm.addEventListener("mousedown", function(e) {
+            isMouseDown = true;
+            offsetX = e.clientX - uploadForm.getBoundingClientRect().left;
+            offsetY = e.clientY - uploadForm.getBoundingClientRect().top;
+            document.addEventListener("mousemove", moveElement);
+        });
+
+        document.addEventListener("mouseup", function() {
+            isMouseDown = false;
+            document.removeEventListener("mousemove", moveElement);
+        });
+
+        function moveElement(e) {
+            if (isMouseDown) {
+                uploadForm.style.left = e.clientX - offsetX + "px";
+                uploadForm.style.top = e.clientY - offsetY + "px";
+                uploadForm.style.position = "absolute";
             }
         }
-        ?>
-        <div id="uploadForm" class="floating-upload">
-            <?php
-            // Include the file upload .inc file at the bottom 
-            include 'submitFiles.inc'; 
-            ?>
-        </div>
 
-        <!-- Include Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Fetch total files from PHP (make sure this is properly defined in PHP)
-                // let totalFiles = <?php echo $totalFiles; ?>;
+        // PHP variable containing unique years
+        const uniqueYears = <?php echo json_encode($uniqueYears); ?>;
 
-                // Check if totalFiles is defined and greater than 0
-                if (typeof totalFiles !== 'undefined' && totalFiles > 0) {
-                    let index = 0;
+        // Populate the dropdown
+        const dropdown = document.getElementById('yearDropdown');
+        uniqueYears.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            dropdown.appendChild(option);
+        });
 
-                    // Initialize toast with autohide set to false
-                    let progressToast = new bootstrap.Toast(document.getElementById('progressToast'), {
-                        autohide: false
-                    });
-                    progressToast.show();
+        function selectYear() {
+            const selectedYear = document.getElementById("yearDropdown").value;
+            if (selectedYear === 'all') {
+                // Redirect to all.php if "All" is selected
+                window.location.href = 'all.php';
+            } else if (selectedYear) {
+                // Set the hidden input's value
+                document.getElementById('hiddenYearInput').value = selectedYear;
 
-                    // Function to update progress
-                    function updateProgress() {
-                        if (index < totalFiles) {
-                            index++;
-                            let progress = Math.floor((index / totalFiles) * 100);
-                            let progressBar = document.getElementById('progressBar');
-                            progressBar.style.width = progress + '%';
-                            progressBar.setAttribute('aria-valuenow', progress);
-                            progressBar.innerHTML = progress + '%';
-                        } else {
-                            clearInterval(progressInterval);  // Stop updating once completed
-                        }
-                    }
-
-                    // Update progress every 100ms (simulate processing delay)
-                    let progressInterval = setInterval(updateProgress, 100);
-                }
-            });   
-
-            <!-- JavaScript to fade out all messages one by one -->
-
-            window.onload = function() {
-                var messages = document.getElementsByClassName('message');
-                var delay = 0; // Initial delay
-
-                for (var i = 0; i < messages.length; i++) {
-                    (function(index) {
-                        // Fade out the message after a delay
-                        setTimeout(function() {
-                            messages[index].classList.add('fade-out'); // Add the fade-out class
-                            
-                            // Set display to none after fade-out is complete
-                            setTimeout(function() {
-                                messages[index].style.display = 'none'; // Remove the message from display
-                            }, 1000); // Match this duration to the CSS transition duration (1 second)
-                        }, delay);
-                        delay += 2000; // Increment delay by 3 seconds for each message
-                    })(i);
-                }
-            };
-
-            // Make the upload form draggable
-            const uploadForm = document.getElementById("uploadForm");
-
-            let isMouseDown = false;
-            let offsetX = 0;
-            let offsetY = 0;
-
-            uploadForm.addEventListener("mousedown", function(e) {
-                isMouseDown = true;
-                offsetX = e.clientX - uploadForm.getBoundingClientRect().left;
-                offsetY = e.clientY - uploadForm.getBoundingClientRect().top;
-                document.addEventListener("mousemove", moveElement);
-            });
-
-            document.addEventListener("mouseup", function() {
-                isMouseDown = false;
-                document.removeEventListener("mousemove", moveElement);
-            });
-
-            function moveElement(e) {
-                if (isMouseDown) {
-                    uploadForm.style.left = e.clientX - offsetX + "px";
-                    uploadForm.style.top = e.clientY - offsetY + "px";
-                    uploadForm.style.position = "absolute";
-                }
+                // Submit the form
+                document.getElementById('yearForm').submit();
             }
-
-            // PHP variable containing unique years
-            const uniqueYears = <?php echo json_encode($uniqueYears); ?>;
-
-            // Populate the dropdown
-            const dropdown = document.getElementById('yearDropdown');
-            uniqueYears.forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                dropdown.appendChild(option);
-            });
-
-            function selectYear() {
-                const selectedYear = document.getElementById("yearDropdown").value;
-                if (selectedYear === 'all') {
-                    // Redirect to all.php if "All" is selected
-                    window.location.href = 'all.php';
-                } else if (selectedYear) {
-                    // Set the hidden input's value
-                    document.getElementById('hiddenYearInput').value = selectedYear;
-
-                    // Submit the form
-                    document.getElementById('yearForm').submit();
-                }
-            }
-        </script>
+        }
+    </script>
     </body>
 </html>

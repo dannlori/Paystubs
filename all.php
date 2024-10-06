@@ -51,7 +51,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 </head>
 <body>
     <!-- Header section with centered text and logout button -->
-    <header class="bg-light py-3">
+    <header class="bg-light py-1">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Centered "Paystubs" text -->
