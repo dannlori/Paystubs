@@ -144,8 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uniqueYears = $stmt->fetchAll(PDO::FETCH_COLUMN);
         if ($uniqueYears) {
             $dataInDB = "";
+            $selectDataText = "SELECT ^ TO VIEW";
         } else {
             $dataInDB = "<p><b><center>No Files in Database. Add some files.</center></b></p>";
+            $selectDataText = "Upload Files to start! -->";
         }
         ?>
         <!-- Header section with dropdown, centered text and logout button -->
@@ -371,7 +373,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="container container-fluid">
                 <div class="row">
                     <div class="col-3 fw-bold py-3">
-                        SELECT ^ TO VIEW
+                        <?=$selectDataText?>
                     </div>
                     <div class="col-3 fw-bold py-3">
                         <?=$dataInDB?>
