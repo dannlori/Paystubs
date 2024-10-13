@@ -1,6 +1,7 @@
 <?php
 // Check if a session is not already started before calling session_start
 if (session_status() == PHP_SESSION_NONE) {
+    ini_set('session.gc_maxlifetime', 1800);
     session_start();
 }
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
