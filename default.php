@@ -1,37 +1,8 @@
 <?php
-// Check if a session is not already started before calling session_start
-if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true || session_status() == PHP_SESSION_NONE) {
-    header('Location: login.php');
-    exit;
-}
-
-// Set the session timeout duration to 30 minutes (in seconds)
-$timeout_duration = 1800; // 30 minutes
-
-// Check if the "last activity" timestamp is set in the session
-if (isset($_SESSION['last_activity'])) {
-    // Calculate the time elapsed since the last activity
-    $elapsed_time = time() - $_SESSION['last_activity'];
-
-    // If the elapsed time is greater than the timeout duration, destroy the session
-    if ($elapsed_time > $timeout_duration) {
-        session_unset();     // Unset session variables
-        session_destroy();   // Destroy the session
-        header("Location: login.php"); // Redirect to login page or other action
-        exit;
-    }
-}
-
-// Update the last activity time
-$_SESSION['last_activity'] = time();
-
+#Check for login and/or session
+require_once 'check_auth.php';
+#Load configuration file.
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
-
-// Check if the user is authenticated
-//if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
-//    header('Location: login.php');
-//    exit;
-//}
 
 // Check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -116,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             /* Floating div in the top right corner */
             .floating-upload {
                 position: fixed;
-                top: 60px;
-                right: 10px;
+                top: 85%;
+                right: 20px;
                 background-color: lightblue;
                 border: 1px solid #ccc;
                 padding: 5px;
@@ -129,6 +100,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 resize: none; /* Prevent resizing */
                 overflow: hidden; /* Prevent scrollbars */
                 opacity: 0.85; /* Semi-transparent */
+            }
+
+            /* Close button */
+            .close-btn {
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                cursor: pointer;
+                font-size: 18px;
+                color: black;
+            }
+
+            .close-btn:hover {
+                color: red;
             }
         </style>
 
@@ -155,12 +140,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body>
     
         <?php
-        // Get data from the table
-        // Query to select all records from the table
-        $sql = "SELECT DISTINCT YEAR(Pay_Date) AS year 
-            FROM paystubs
-            ORDER BY year";
-            
+        // Get years to populate "Select Year" dropdown from the table
+        $sql = "SELECT DISTINCT YEAR(Pay_Date) AS year FROM paystubs ORDER BY year";
         $stmt = $pdo->prepare($sql); // Prepare the SQL query
         $stmt->execute(); // Execute the query
 
@@ -246,7 +227,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // START DISPLAY OF TABLE
-
                 // If there are results, display them in an HTML table
                 if (count($results) > 0) {
                     $numRows = count($results); // Get the number of rows in the array
@@ -422,6 +402,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         ?>
         <div id="uploadForm" class="floating-upload">
+            <span class="close-btn" onclick="hideuploadForm()" title="Hide window">×</span>
             <?php
             // Include the file upload .inc file at the bottom 
             include 'submitFiles.inc'; 
@@ -539,6 +520,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Submit the form
                     document.getElementById('yearForm').submit();
                 }
+            }
+
+            function hideuploadForm() {
+                document.getElementById('uploadForm').style.display = 'none';
             }
         </script>
     </body>
