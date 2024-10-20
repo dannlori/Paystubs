@@ -12,6 +12,8 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
     <title>All Paystubs</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">        
+    <!-- Font Awesome CSS -->
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>      
     <style>
         html, body {
             margin: 0;
@@ -46,14 +48,16 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
     <!-- Header section with centered text and logout button -->
     <header class="bg-light py-1">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-3">
+                    <a href="default.php" class="btn btn-primary">Back</a>
+                </div>
                 <!-- Centered "Paystubs" text -->
-                <div class="flex-grow-1 text-center">
+                <div class="col-3">
                     <h1 class="mb-0">All Paystubs</h1>
                 </div>
                 <!-- Logout button aligned to the right -->
-                <div>
-                    <a href="default.php" class="btn btn-primary">Back</a>
+                <div class="col-3">
                     <a href="logout.php" class="btn btn-danger">Logout</a>
                 </div>
             </div>

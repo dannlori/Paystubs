@@ -7,9 +7,11 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 // Check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the submitted year
+    $submittedYearText = $_POST['selectedYear'] . ' Paystubs' ?? '';
     $submittedYear = $_POST['selectedYear'] ?? '';
     $showData = 1;
 } else {
+    $submittedYearText = "<span id='make_selection'><-- Make a selection</span>";
     $submittedYear = "";
     $showData = 0;
 }
@@ -38,6 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 background-color: lightblue; /* Just to see the div visually */
             }
             
+            #make_selection {
+                text-align:center;
+                vertical-align: baseline ;
+                font-size: 30px;
+            }
+
             /* No Files */
             .custom-no-files {
                 text-align: center;
@@ -166,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </select>
                     </div> 
                     <div class="col-3">
-                        <h1 class="mb-0"><?=$submittedYear?> Paystubs</h1>
+                        <h1 class="mb-0"><?=$submittedYearText?></h1>
                     </div>
                     <!-- Logout button aligned to the right -->
                     <div class="col-3">
