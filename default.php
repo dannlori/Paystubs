@@ -1,7 +1,8 @@
 <?php
 // Check if a session is not already started before calling session_start
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true || session_status() == PHP_SESSION_NONE) {
+    header('Location: login.php');
+    exit;
 }
 
 // Set the session timeout duration to 30 minutes (in seconds)
@@ -49,7 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Paystubs</title>
         <!-- Include Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">  
+        <!-- Font Awesome CSS -->
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>      
         <style>
             html, body {
                 margin: 0;

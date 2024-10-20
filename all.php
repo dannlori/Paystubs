@@ -1,7 +1,8 @@
 <?php
 // Check if a session is not already started before calling session_start
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true || session_status() == PHP_SESSION_NONE) {
+     header('Location: login.php');
+     exit;
 }
 
 // Set the session timeout duration to 30 minutes (in seconds)
