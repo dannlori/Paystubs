@@ -6,7 +6,7 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true ||
 }
 
 // Set the session timeout duration to 5 minutes (in seconds)
-$timeout_duration = 300; // 5 minutes
+$timeout_duration = 310; // 5 minutes
 
 // Check if the "last activity" timestamp is set in the session
 if (isset($_SESSION['last_activity'])) {

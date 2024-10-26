@@ -137,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 z-index: 1000;
                 opacity: 1;
                 transition: opacity 1s; /* Transition for fading */
+                border-radius: 10px; /* Rounded corners */
             }
 
             #closeAlert {
@@ -187,9 +188,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         ?>
 
-        <div id="sessionAlert" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid black; padding:20px; z-index:1000; opacity:1; transition: opacity 1s;">
+        <div id="sessionAlert" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid black; padding:20px; z-index:1000; opacity:1; transition: opacity 1s; border-radius:10px;">
             <span id="closeAlert" style="cursor:pointer; float:right;">&times;</span>
-            Your session will expire in 30 seconds due to inactivity.
+            Your session will expire in <span id="countdown">30</span> seconds.
         </div>
 
         <!-- Header section with dropdown, centered text and logout button -->
@@ -590,21 +591,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 const alertBox = document.getElementById("sessionAlert");
                 alertBox.style.display = "block"; // Show the alert
 
-                // Set a timeout to fade out the alert after 5 seconds
-                const fadeOutTimeout = setTimeout(function() {
-                    alertBox.style.opacity = 0; // Start fading out
-                }, 5000);
+                let timeLeft = 29; // Countdown time in seconds
+                const countdownElement = document.getElementById("countdown");
 
-                // Set another timeout to hide the alert after the fade effect completes
-                const hideTimeout = setTimeout(function() {
-                    alertBox.style.display = "none"; // Hide the alert after fading out
-                }, 6000); // Match this with the transition duration (1 second)
+                // Update the countdown every second
+                const countdownInterval = setInterval(function() {
+                    countdownElement.textContent = timeLeft; // Update the displayed time
+                    timeLeft--;
+
+                    if (timeLeft < 0) {
+                        clearInterval(countdownInterval); // Stop the countdown
+                        alertBox.style.opacity = 0; // Start fading out
+                        setTimeout(function() {
+                            alertBox.style.display = "none"; // Hide the alert after fading out
+                        }, 1000); // Wait for the fade effect to complete
+                    }
+                }, 1000); // Update every second
 
                 // Close button functionality
                 const closeButton = document.getElementById("closeAlert");
                 closeButton.onclick = function() {
-                    clearTimeout(fadeOutTimeout); // Clear fade out timeout
-                    clearTimeout(hideTimeout); // Clear hide timeout
+                    clearInterval(countdownInterval); // Clear the countdown interval
                     alertBox.style.opacity = 0; // Start fading out
                     setTimeout(function() {
                         alertBox.style.display = "none"; // Hide the alert after fading out
@@ -612,8 +619,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 };
 
             }, 290000); // 290 seconds in milliseconds
-
-
         </script>
     </body>
 </html>

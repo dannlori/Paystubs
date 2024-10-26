@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">  
         <!-- Font Awesome CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> <!-- Fancy font -->
+
         <style>
             html, body {
                 margin: 0;
@@ -40,55 +42,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 height: 100%;
                 background: linear-gradient(to right, #ff7e5f, #feb47b); /* Adjust colors */
             }
-            #password {
-                border-radius: 10px;  /* Adjust the value for roundness */
-                padding: 5px;
-                border: 1px solid #ccc;
-                width: 200px;  /* Adjust width as needed */
-                font-size: 20px;
-            }
-
-            #invalid_password {
-                padding: 5px;
-                background-color: gray; /* Black box behind the text */
-                border-radius: 10px;  /* Adjust the value for roundness */
-                padding: 10px 20px; /* Padding inside the black box */
-                display: inline-block; /* Ensure the box wraps tightly around the text */
-                font-size: 20px;
-                font-weight: bolder;
-                color: red; /* Make the text red to indicate failure */
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow settings */
-                font-weight: bold; /* Optional: makes the text bold */
-            }
-
-            #submit-button {
-                border-radius: 8px;  /* Adjust the value for roundness */
-                padding: 6px 12px;
-                border: none;
-                background-color: #4CAF50;  /* Button color */
+            #main-title {
+                font-family: 'Playfair Display', serif; /* Use the fancy font */
+                font-size: 8rem; /* Larger font size */
                 color: white;
-                font-size: 20px;
+                opacity: 0; /* Start hidden */
+                transition: opacity 2s ease; /* Fade transition */
+            }
+            #password-container {
+                display: none; /* Initially hidden */
+                opacity: 0; /* Start hidden */
+                transition: opacity 2s ease; /* Fade transition */
+            }
+            #password {
+                border-radius: 10px;
+                padding: 15px;
+                border: 1px solid #ccc;
+                width: 300px;
+                font-size: 24px;
+            }
+            #submit-button {
+                border-radius: 8px;
+                padding: 12px 24px;
+                border: none;
+                background-color: #4CAF50;
+                color: white;
+                font-size: 24px;
                 cursor: pointer;
             }
-
             #submit-button:hover {
-                background-color: #45a049;  /* Darker shade on hover */
+                background-color: #45a049;
+            }
+            #enter-button {
+                font-family: 'Playfair Display', serif; /* Apply the fancy font */
+                font-size: 24px; /* Larger font size */
+                padding: 12px 30px; /* Increased padding */
+                border: none; /* Remove border */
+                background-color: #4CAF50; /* Button color */
+                color: white; /* Button text color */
+                transition: background-color 0.3s; /* Transition for hover effect */
+            }
+            #enter-button:hover {
+                background-color: #45a049; /* Darker shade on hover */
+            }
+            #enterbuttonspan {
+                opacity: 0; /* Start hidden */
+                transition: opacity 2s ease; /* Fade transition */
             }
         </style>
     </head>
     <body>
         <header class="bg-light py-1">
-            <div class="container">
-                <div class="row align-items-center justify-content-between">
-                    <h2>
-                        <center><i class="fas fa-lock"></i> Authentication required to access site</center>
-                    </h2>
-                </div>
+            <div class="container text-center">
+                <h4>
+                    <i class="fas fa-lock"></i> Authentication required to access site
+                </h4>
             </div>
         </header>
 
-        <p>
-            <center>
+        <div class="container text-center" style="margin-top: 100px;">
+            <h1 id="main-title">PAYSTUB$</h1>
+            <span id="enterbuttonspan"><button id="enter-button" class="btn btn-primary" onclick="showPasswordBox()">ENTER</button></span>
+
+            <div id="password-container">
                 <form action="login.php" method="POST">
                     <label for="password" title="Enter Password!"><i class="fas fa-key fa-2x"></i></label>
                     <input type="password" id="password" name="password" title="Enter Password!" required autofocus placeholder="Enter Password">
@@ -98,7 +114,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php if (isset($error)) : ?>
                     <p style="color: red;"><?php echo $error; ?></p>
                 <?php endif; ?>
-            </center>
-        </p>
+            </div>
+        </div>
+
+        <script>
+            function showPasswordBox() {
+                // Hide the ENTER button
+                const enterButton = document.getElementById('enter-button');
+                enterButton.style.display = 'none'; // Hide the button
+
+                // Fade in the title
+                const title = document.getElementById('main-title');
+                title.style.opacity = 1; // Set opacity to 1
+
+                const enterbuttonspan = document.getElementById('enterbuttonspan');
+                enterbuttonspan.style.opacity = 1; // Set opacity to 1
+
+                // Show and fade in the password container
+                const passwordContainer = document.getElementById('password-container');
+                passwordContainer.style.display = 'block'; // Make it visible
+                setTimeout(() => {
+                    passwordContainer.style.opacity = 1; // Set opacity to 1 after the display change
+                }, 150); // A slight delay to ensure display is set
+            }
+
+            // Show the title with a delay
+            window.onload = () => {
+                const title = document.getElementById('main-title');
+                title.style.opacity = 1; // Fade in title on load
+                const enterbuttonspan = document.getElementById('enterbuttonspan');
+                enterbuttonspan.style.opacity = 1; // Fade in title on load
+            };
+        </script>
     </body>
 </html>
