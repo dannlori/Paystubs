@@ -15,13 +15,33 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
     <!-- Font Awesome CSS -->
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>      
     <style>
-        html, body {
+        body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Adjust colors */
+            overflow: hidden; /* Prevent scrolling */
         }
 
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/background_paystubs.jpg'); /* Replace with your image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            z-index: -1; /* Make sure it stays in the background */
+        }
+
+        .content {
+            position: relative;
+            z-index: 1; /* Ensure content is above the background */
+            color: white; /* Change text color for contrast */
+            text-align: center;
+            padding: 20px;
+            opacity: 95%;
+        }
         .fullscreen-div {
             width: 100vw;  /* Full width of the viewport */
             height: 100vh; /* Full height of the viewport */
@@ -45,6 +65,7 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
     </style>
 </head>
 <body>
+    <div class="background"></div>
     <!-- Header section with centered text and logout button -->
     <header class="bg-light py-1">
         <div class="container">
@@ -154,7 +175,7 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
             $numRows = count($results); // Get the number of rows in the array
             // Start the HTML table with Bootstrap table classes and custom CSS
             ?>
-            <div class='container-fluid d-flex justify-content-center'>
+            <div class='container-fluid d-flex justify-content-center content'>
                 <div class='table-wrapper'>
                     <table class='table table-sm table-striped table-bordered table-hover'>
                         <?php
@@ -304,6 +325,18 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
         <script src="security/js/session_monitoring.js" defer></script>
+        <script>
+            const backgrounds = [
+                'url("images/paystubs1.png")',
+                'url("images/paystubs2.jpg")',
+                'url("images/paystubs3.jpg")',
+                'url("images/paystubs4.jpg")'
+            ];
 
+            // Select a random background image
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            const backgroundDiv = document.querySelector('.background');
+            backgroundDiv.style.backgroundImage = backgrounds[randomIndex];
+        </script>
     </body>
 </html>

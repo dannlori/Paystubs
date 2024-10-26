@@ -56,12 +56,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> <!-- Fancy font -->
 
         <style>
-            html, body {
+            body, html {
                 margin: 0;
                 padding: 0;
                 height: 100%;
-                background: linear-gradient(to right, #ff7e5f, #feb47b); /* Adjust colors */
+                overflow: hidden; /* Prevent scrolling */
             }
+
+            .background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-size: cover; /* Cover the entire area */
+                background-position: center; /* Center the image */
+                z-index: -1; /* Make sure it stays in the background */
+            }
+
+            .content {
+                position: relative;
+                z-index: 1; /* Ensure content is above the background */
+                color: white; /* Change text color for contrast */
+                text-align: top;
+                padding: 20px;
+            }
+
             #main-title {
                 font-family: 'Playfair Display', serif; /* Use the fancy font */
                 font-size: 8rem; /* Larger font size */
@@ -124,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </style>
     </head>
     <body>
+        <div class="background"></div>
         <header class="bg-light py-1">
             <div class="container text-center">
                 <h4>
@@ -132,8 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </header>
 
-        <div class="container text-center" style="margin-top: 100px;">
-            <h1 id="main-title">PAY$TUB$</h1>
+        <div class="container text-center content">
 
             <!-- Display the alert message if it exists -->
             <?php if (!empty($session_error)) : ?>
@@ -165,8 +185,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 enterButton.style.display = 'none'; // Hide the button
 
                 // Fade in the title
-                const title = document.getElementById('main-title');
-                title.style.opacity = 1; // Set opacity to 1
+                //const title = document.getElementById('main-title');
+                //title.style.opacity = 1; // Set opacity to 1
 
                 const enterbuttonspan = document.getElementById('enterbuttonspan');
                 enterbuttonspan.style.opacity = 1; // Set opacity to 1
@@ -182,18 +202,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Show the title with a delay
             window.onload = () => {
-                const title = document.getElementById('main-title');
-                title.style.opacity = 1; // Fade in title on load
+                //const title = document.getElementById('main-title');
+                //title.style.opacity = 1; // Fade in title on load
                 const enterbuttonspan = document.getElementById('enterbuttonspan');
                 enterbuttonspan.style.opacity = 1; // Fade in title on load
 
                 const sessionAlert = document.getElementById('session-alert');
                 if (sessionAlert) {
                     setTimeout(() => {
-                        sessionAlert.style.display = 'none'; // Hide the alert after 10 seconds
-                    }, 10000); // 10000 milliseconds = 10 seconds
+                        sessionAlert.style.display = 'none'; // Hide the alert after 7 seconds
+                    }, 7000); // 7000 milliseconds = 7 seconds
                 }
             };
+            const backgrounds = [
+                'url("../images/paystubs1.png")',
+                'url("../images/paystubs2.jpg")',
+                'url("../images/paystubs3.jpg")',
+                'url("../images/paystubs4.jpg")'
+            ];
+
+            // Select a random background image
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            const backgroundDiv = document.querySelector('.background');
+            backgroundDiv.style.backgroundImage = backgrounds[randomIndex];
         </script>
     </body>
 </html>
