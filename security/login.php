@@ -71,8 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             #auth_error {
-                background-color:yellow;
-                color: red;
+                color: yellow;
                 border-radius:5px;
                 width:fit-content;
                 padding:10px;
@@ -191,8 +190,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 const sessionAlert = document.getElementById('session-alert');
                 if (sessionAlert) {
                     setTimeout(() => {
-                        sessionAlert.style.display = 'none'; // Hide the alert after 5 seconds
-                    }, 5000); // 5000 milliseconds = 5 seconds
+                        sessionAlert.style.display = 'none'; // Hide the alert after 10 seconds
+                    }, 10000); // 10000 milliseconds = 10 seconds
                 }
             };
         </script>

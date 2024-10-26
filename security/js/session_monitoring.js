@@ -17,8 +17,8 @@
                 xhr.send();
             }
 
-            // Check the session every 320 seconds
-            setInterval(checkSession, 320000);
+            // Check the session every 322 seconds
+            setInterval(checkSession, 322000);
 
             // Show the custom alert after 290 seconds (290,000 milliseconds)
             setTimeout(function() {
