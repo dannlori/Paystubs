@@ -1,6 +1,7 @@
 <?php
 #Check for login and/or session
 require_once 'check_auth.php';
+
 #Load configuration file.
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 
@@ -123,6 +124,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             .close-btn:hover {
                 color: red;
             }
+
+            #sessionAlert {
+                display: none; /* Initially hidden */
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                border: 1px solid black;
+                padding: 20px;
+                z-index: 1000;
+                opacity: 1;
+                transition: opacity 1s; /* Transition for fading */
+            }
+
+            #closeAlert {
+                cursor: pointer;
+                float: right;
+                font-size: 20px;
+                line-height: 20px; /* Center the close button vertically */
+            }
+
         </style>
 
         <form id="yearForm" method="POST" action="">
@@ -163,6 +186,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $selectDataText = "Upload Files to start! -->";
         }
         ?>
+
+        <div id="sessionAlert" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid black; padding:20px; z-index:1000; opacity:1; transition: opacity 1s;">
+            <span id="closeAlert" style="cursor:pointer; float:right;">&times;</span>
+            Your session will expire in 30 seconds due to inactivity.
+        </div>
+
         <!-- Header section with dropdown, centered text and logout button -->
         <header class="bg-light py-1">
             <div class="container">
@@ -455,6 +484,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });   
 
+            // Check Session and if over 5 min of inactivity, Logout
+            function checkSession() {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "session_check.php", true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.status === 'timeout') {
+                            console.log('Session Data:', response.sessionData);
+                            alert("Your session has expired. You will be redirected to the login page.");
+                            window.location.href = 'login.php'; // Redirect to login page
+                        } else if (response.status === 'not_logged_in') {
+                            window.location.href = 'login.php'; // Redirect if not logged in
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            // Check the session every 320 seconds
+            setInterval(checkSession, 320000);
+            
             <!-- JavaScript to fade out all messages one by one -->
 
             window.onload = function() {
@@ -533,6 +584,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             function hideuploadForm() {
                 document.getElementById('uploadForm').style.display = 'none';
             }
+
+            // Show the custom alert after 290 seconds (290,000 milliseconds)
+            setTimeout(function() {
+                const alertBox = document.getElementById("sessionAlert");
+                alertBox.style.display = "block"; // Show the alert
+
+                // Set a timeout to fade out the alert after 5 seconds
+                const fadeOutTimeout = setTimeout(function() {
+                    alertBox.style.opacity = 0; // Start fading out
+                }, 5000);
+
+                // Set another timeout to hide the alert after the fade effect completes
+                const hideTimeout = setTimeout(function() {
+                    alertBox.style.display = "none"; // Hide the alert after fading out
+                }, 6000); // Match this with the transition duration (1 second)
+
+                // Close button functionality
+                const closeButton = document.getElementById("closeAlert");
+                closeButton.onclick = function() {
+                    clearTimeout(fadeOutTimeout); // Clear fade out timeout
+                    clearTimeout(hideTimeout); // Clear hide timeout
+                    alertBox.style.opacity = 0; // Start fading out
+                    setTimeout(function() {
+                        alertBox.style.display = "none"; // Hide the alert after fading out
+                    }, 1000); // Wait for the fade effect to complete
+                };
+
+            }, 290000); // 290 seconds in milliseconds
+
+
         </script>
     </body>
 </html>

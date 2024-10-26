@@ -5,8 +5,8 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true ||
     exit;
 }
 
-// Set the session timeout duration to 30 minutes (in seconds)
-$timeout_duration = 1800; // 30 minutes
+// Set the session timeout duration to 5 minutes (in seconds)
+$timeout_duration = 300; // 5 minutes
 
 // Check if the "last activity" timestamp is set in the session
 if (isset($_SESSION['last_activity'])) {
@@ -17,10 +17,12 @@ if (isset($_SESSION['last_activity'])) {
     if ($elapsed_time > $timeout_duration) {
         session_unset();     // Unset session variables
         session_destroy();   // Destroy the session
+        echo json_encode(value: ['status' => 'timeout']);
         header("Location: login.php"); // Redirect to login page or other action
         exit;
     }
-}
 
-// Update the last activity time
-$_SESSION['last_activity'] = time();
+    // Update the last activity time
+    $_SESSION['last_activity'] = time();
+ 
+}

@@ -1,8 +1,13 @@
 <?php
+//echo '<pre>'; // Optional: to format the output
+//print_r($_SESSION);
+//echo '</pre>';
 // Check if a session is not already started before calling session_start
 if (session_status() == PHP_SESSION_NONE) {
     ini_set('session.gc_maxlifetime', 1800);
     session_start();
+    $_SESSION['authenticated'] = false;
+
 }
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 
@@ -11,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if ($password === $stored_password) {
         $_SESSION['authenticated'] = true;
+        $_SESSION['last_activity'] = time();
         header('Location: default.php');
         exit;
     } else {
