@@ -1,6 +1,6 @@
 <?php
 #Check for login and/or session
-require_once 'check_auth.php';
+require_once 'security/check_auth.php';
 #Load configuration file.
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 ?>
@@ -58,7 +58,7 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
                 </div>
                 <!-- Logout button aligned to the right -->
                 <div class="col-3">
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="security/logout.php" class="btn btn-danger">Logout</a>
                 </div>
             </div>
         </div>
@@ -303,5 +303,7 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+        <script src="security/js/session_monitoring.js" defer></script>
+
     </body>
 </html>

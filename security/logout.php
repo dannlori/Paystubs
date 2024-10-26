@@ -8,5 +8,5 @@ session_destroy();   // Destroy the session
 //echo '<pre>'; // Optional: to format the output
 //print_r($_SESSION);
 //echo '</pre>';
-header('Location: login.php');
+header('Location: login.php?s=logout');
 exit;

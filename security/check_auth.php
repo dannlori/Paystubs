@@ -1,7 +1,7 @@
 <?php
 // Check if a session is not already started before calling session_start
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true || session_status() == PHP_SESSION_NONE) {
-    header('Location: login.php');
+    header('Location: security/login.php');
     exit;
 }
 
@@ -18,7 +18,7 @@ if (isset($_SESSION['last_activity'])) {
         session_unset();     // Unset session variables
         session_destroy();   // Destroy the session
         echo json_encode(value: ['status' => 'timeout']);
-        header("Location: login.php"); // Redirect to login page or other action
+        header("Location: security/login.php"); // Redirect to login page or other action
         exit;
     }
 

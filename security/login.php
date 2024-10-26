@@ -11,13 +11,33 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 
+$error = ''; // Initialize error variable
+
+// Check for the 's' parameter in the URL
+if (isset($_GET['s'])) {
+    switch ($_GET['s']) {
+        case 'timeout':
+            $session_error = '<span id="session-alert" class="alert alert-warning">Your session has expired. Please log in again.</span>';
+            break;
+        case 'logout':
+            $session_error = '<span id="session-alert" class="alert alert-info">You have successfully logged out.</span>';
+            break;
+        case 'nologin':
+            $session_error = '<span id="session-alert" class="alert alert-info">No session found. Please login!</span>';
+            break;
+        
+        default:
+            break;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'] ?? '';
     
     if ($password === $stored_password) {
         $_SESSION['authenticated'] = true;
         $_SESSION['last_activity'] = time();
-        header('Location: default.php');
+        header('Location: ../default.php');
         exit;
     } else {
         $error = '<span id="invalid_password">Invalid password. Please try again.</span>';
@@ -49,6 +69,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 opacity: 0; /* Start hidden */
                 transition: opacity 2s ease; /* Fade transition */
             }
+
+            #auth_error {
+                background-color:yellow;
+                color: red;
+                border-radius:5px;
+                width:fit-content;
+                padding:10px;
+                margin: 0 auto;
+                text-align: center;
+                font-weight: bolder;
+                font-size: larger;
+            }
+
             #password-container {
                 display: none; /* Initially hidden */
                 opacity: 0; /* Start hidden */
@@ -101,7 +134,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </header>
 
         <div class="container text-center" style="margin-top: 100px;">
-            <h1 id="main-title">PAYSTUB$</h1>
+            <h1 id="main-title">PAY$TUB$</h1>
+
+            <!-- Display the alert message if it exists -->
+            <?php if (!empty($session_error)) : ?>
+                <div class="my-3">
+                    <?php echo "<br/>" . $session_error; ?>
+                </div>
+            <?php endif; ?>
+
             <span id="enterbuttonspan"><button id="enter-button" class="btn btn-primary" onclick="showPasswordBox()">ENTER</button></span>
 
             <div id="password-container">
@@ -110,11 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="password" id="password" name="password" title="Enter Password!" required autofocus placeholder="Enter Password">
                     <button type="submit" id="submit-button"><i class="fas fa-arrow-circle-right"></i></button>
                 </form>
-                <br/><br/>
-                <?php if (isset($error)) : ?>
-                    <p style="color: red;"><?php echo $error; ?></p>
-                <?php endif; ?>
+                <br/>
             </div>
+            <br/><br/>
+            <?php if (isset($error)) : ?>
+                <p id="auth_error"><?php echo $error; ?></p>
+            <?php endif; ?>
         </div>
 
         <script>
@@ -135,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 passwordContainer.style.display = 'block'; // Make it visible
                 setTimeout(() => {
                     passwordContainer.style.opacity = 1; // Set opacity to 1 after the display change
+                    document.getElementById('password').focus(); // Set focus on the password field
                 }, 150); // A slight delay to ensure display is set
             }
 
@@ -144,6 +187,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 title.style.opacity = 1; // Fade in title on load
                 const enterbuttonspan = document.getElementById('enterbuttonspan');
                 enterbuttonspan.style.opacity = 1; // Fade in title on load
+
+                const sessionAlert = document.getElementById('session-alert');
+                if (sessionAlert) {
+                    setTimeout(() => {
+                        sessionAlert.style.display = 'none'; // Hide the alert after 5 seconds
+                    }, 5000); // 5000 milliseconds = 5 seconds
+                }
             };
         </script>
     </body>
