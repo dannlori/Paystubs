@@ -1,0 +1,59 @@
+#main-title {
+    font-family: 'Playfair Display', serif; /* Use the fancy font */
+    font-size: 8rem; /* Larger font size */
+    color: white;
+    opacity: 0; /* Start hidden */
+    transition: opacity 2s ease; /* Fade transition */
+}
+
+#auth_error {
+    color: yellow;
+    border-radius:5px;
+    width:fit-content;
+    padding:10px;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+#password-container {
+    display: none; /* Initially hidden */
+    opacity: 0; /* Start hidden */
+    transition: opacity 2s ease; /* Fade transition */
+}
+#password {
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    width: 300px;
+    font-size: 24px;
+}
+#submit-button {
+    border-radius: 8px;
+    padding: 12px 24px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+#submit-button:hover {
+    background-color: #45a049;
+}
+#enter-button {
+    font-family: 'Playfair Display', serif; /* Apply the fancy font */
+    font-size: 24px; /* Larger font size */
+    padding: 12px 30px; /* Increased padding */
+    border: none; /* Remove border */
+    background-color: #4CAF50; /* Button color */
+    color: white; /* Button text color */
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+#enter-button:hover {
+    background-color: #45a049; /* Darker shade on hover */
+}
+#enterbuttonspan {
+    opacity: 0; /* Start hidden */
+    transition: opacity 2s ease; /* Fade transition */
+}

@@ -27,147 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">  
         <!-- Font Awesome CSS -->
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>      
-        <style>
-            body, html {
-                margin: 0;
-                padding: 0;
-                height: 100%;
-                overflow: hidden; /* Prevent scrolling */
-            }
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/default.css">
 
-            .background {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-size: cover; /* Cover the entire area */
-                background-position: center; /* Center the image */
-                z-index: -1; /* Make sure it stays in the background */
-            }
-
-            .content {
-                position: relative;
-                z-index: 1; /* Ensure content is above the background */
-                color: white; /* Change text color for contrast */
-                text-align: center;
-                padding: 20px;
-                opacity: 95%;
-            }
-
-            .fullscreen-div {
-                width: 100vw;  /* Full width of the viewport */
-                height: 100vh; /* Full height of the viewport */
-                background-color: lightblue; /* Just to see the div visually */
-            }
-            
-            #make_selection {
-                text-align:center;
-                vertical-align: baseline ;
-                font-size: 30px;
-            }
-
-            /* No Files */
-            .custom-no-files {
-                text-align: center;
-                color: red;
-            }
-
-            #drop-area {
-                border: 2px dashed #ccc;
-                width: 200px;
-                padding: 10px;
-                text-align: center;
-                margin: 0 auto;
-            }
-
-            #drop-area.highlight {
-                border-color: green;
-            }
-
-            #fileElem {
-                display: none;
-            }
-
-            /* Scrollable container */
-            .table-wrapper {
-                max-height: 700px; /* Adjust height as needed */
-                overflow-y: auto;  /* Enable vertical scrolling */
-                width: max-content;
-            }
-
-            thead th {
-                position: sticky;
-                top: 0; /* Fix the header at the top */
-                /* background-color: #f8f9fa; /* Add background to prevent overlap */
-                background-color: coral;
-                z-index: 1; /* Ensure it stays on top */
-            }
-
-            .message {
-                transition: opacity 1s ease; /* 1 second fade out effect */
-                opacity: 1; /* Fully visible */
-            }
-
-            .message.fade-out {
-                opacity: 0; /* Fully transparent */
-            }
-
-            /* Floating div in the top right corner */
-            .floating-upload {
-                position: fixed;
-                top: 85%;
-                right: 20px;
-                background-color: lightblue;
-                border: 1px solid #ccc;
-                padding: 5px;
-                width: 210px;
-                height: auto;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                cursor: move;
-                z-index: 1000;
-                resize: none; /* Prevent resizing */
-                overflow: hidden; /* Prevent scrollbars */
-                opacity: 0.85; /* Semi-transparent */
-            }
-
-            /* Close button */
-            .close-btn {
-                position: absolute;
-                top: 5px;
-                right: 10px;
-                cursor: pointer;
-                font-size: 18px;
-                color: black;
-            }
-
-            .close-btn:hover {
-                color: red;
-            }
-
-            #sessionAlert {
-                display: none; /* Initially hidden */
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                border: 1px solid black;
-                padding: 20px;
-                z-index: 1000;
-                opacity: 1;
-                transition: opacity 1s; /* Transition for fading */
-                border-radius: 10px; /* Rounded corners */
-            }
-
-            #closeAlert {
-                cursor: pointer;
-                float: right;
-                font-size: 20px;
-                line-height: 20px; /* Center the close button vertically */
-            }
-
-        </style>
 
         <form id="yearForm" method="POST" action="">
             <input type="hidden" name="selectedYear" id="hiddenYearInput" value="">
@@ -201,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uniqueYears = $stmt->fetchAll(PDO::FETCH_COLUMN);
         if ($uniqueYears) {
             $dataInDB = "";
-            $selectDataText = "SELECT ^ TO VIEW";
+            $selectDataText = "";
         } else {
             $dataInDB = "<p><b><center>No Files in Database. Add some files.</center></b></p>";
             $selectDataText = "Upload Files to start! -->";
@@ -214,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <!-- Header section with dropdown, centered text and logout button -->
-        <header class="bg-light py-1">
+        <header class="header py-1">
             <div class="container">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-3">
@@ -471,6 +333,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+        <script src="js/background.js"></script>
+        <script src="js/session_monitoring.js" defer></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 // Fetch total files from PHP (make sure this is properly defined in PHP)
@@ -583,20 +447,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             function hideuploadForm() {
                 document.getElementById('uploadForm').style.display = 'none';
             }
-            
-            const backgrounds = [
-                'url("images/paystubs1.png")',
-                'url("images/paystubs2.jpg")',
-                'url("images/paystubs3.jpg")',
-                'url("images/paystubs4.jpg")'
-            ];
-
-            // Select a random background image
-            const randomIndex = Math.floor(Math.random() * backgrounds.length);
-            const backgroundDiv = document.querySelector('.background');
-            backgroundDiv.style.backgroundImage = backgrounds[randomIndex];
-
         </script>
-        <script src="security/js/session_monitoring.js" defer></script>
     </body>
 </html>

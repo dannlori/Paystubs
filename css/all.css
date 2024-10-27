@@ -1,0 +1,14 @@
+/* Scrollable container */
+.table-wrapper {
+    max-height: 700px; /* Adjust height as needed */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: max-content;
+}
+
+thead th {
+    position: sticky;
+    top: 0; /* Fix the header at the top */
+    /* background-color: #f8f9fa; /* Add background to prevent overlap */
+    background-color: coral;
+    z-index: 1; /* Ensure it stays on top */
+}

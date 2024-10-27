@@ -54,98 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Font Awesome CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> <!-- Fancy font -->
+        <link rel="stylesheet" href="../css/common.css">
+        <link rel="stylesheet" href="../css/login.css">
 
-        <style>
-            body, html {
-                margin: 0;
-                padding: 0;
-                height: 100%;
-                overflow: hidden; /* Prevent scrolling */
-            }
-
-            .background {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-size: cover; /* Cover the entire area */
-                background-position: center; /* Center the image */
-                z-index: -1; /* Make sure it stays in the background */
-            }
-
-            .content {
-                position: relative;
-                z-index: 1; /* Ensure content is above the background */
-                color: white; /* Change text color for contrast */
-                text-align: top;
-                padding: 20px;
-            }
-
-            #main-title {
-                font-family: 'Playfair Display', serif; /* Use the fancy font */
-                font-size: 8rem; /* Larger font size */
-                color: white;
-                opacity: 0; /* Start hidden */
-                transition: opacity 2s ease; /* Fade transition */
-            }
-
-            #auth_error {
-                color: yellow;
-                border-radius:5px;
-                width:fit-content;
-                padding:10px;
-                margin: 0 auto;
-                text-align: center;
-                font-weight: bolder;
-                font-size: larger;
-            }
-
-            #password-container {
-                display: none; /* Initially hidden */
-                opacity: 0; /* Start hidden */
-                transition: opacity 2s ease; /* Fade transition */
-            }
-            #password {
-                border-radius: 10px;
-                padding: 15px;
-                border: 1px solid #ccc;
-                width: 300px;
-                font-size: 24px;
-            }
-            #submit-button {
-                border-radius: 8px;
-                padding: 12px 24px;
-                border: none;
-                background-color: #4CAF50;
-                color: white;
-                font-size: 24px;
-                cursor: pointer;
-            }
-            #submit-button:hover {
-                background-color: #45a049;
-            }
-            #enter-button {
-                font-family: 'Playfair Display', serif; /* Apply the fancy font */
-                font-size: 24px; /* Larger font size */
-                padding: 12px 30px; /* Increased padding */
-                border: none; /* Remove border */
-                background-color: #4CAF50; /* Button color */
-                color: white; /* Button text color */
-                transition: background-color 0.3s; /* Transition for hover effect */
-            }
-            #enter-button:hover {
-                background-color: #45a049; /* Darker shade on hover */
-            }
-            #enterbuttonspan {
-                opacity: 0; /* Start hidden */
-                transition: opacity 2s ease; /* Fade transition */
-            }
-        </style>
     </head>
     <body>
         <div class="background"></div>
-        <header class="bg-light py-1">
+        <header class="py-1 header">
             <div class="container text-center">
                 <h4>
                     <i class="fas fa-lock"></i> Authentication required to access site
@@ -178,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
+        <script src="../js/background.js"></script>
         <script>
             function showPasswordBox() {
                 // Hide the ENTER button
@@ -214,17 +130,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }, 7000); // 7000 milliseconds = 7 seconds
                 }
             };
-            const backgrounds = [
-                'url("../images/paystubs1.png")',
-                'url("../images/paystubs2.jpg")',
-                'url("../images/paystubs3.jpg")',
-                'url("../images/paystubs4.jpg")'
-            ];
-
-            // Select a random background image
-            const randomIndex = Math.floor(Math.random() * backgrounds.length);
-            const backgroundDiv = document.querySelector('.background');
-            backgroundDiv.style.backgroundImage = backgrounds[randomIndex];
         </script>
-    </body>
+        </body>
 </html>
