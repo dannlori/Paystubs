@@ -1,1 +1,11 @@
 'paystubs', 'CREATE TABLE `paystubs` (\n  `CO` varchar(255) DEFAULT NULL,\n  `Pay_Date` date NOT NULL,\n  `Rate` decimal(10,2) DEFAULT NULL,\n  `Reg` decimal(10,2) DEFAULT NULL,\n  `OT` decimal(10,2) DEFAULT NULL,\n  `PTO` decimal(10,2) DEFAULT NULL,\n  `HOL` decimal(10,2) DEFAULT NULL,\n  `Gross` decimal(10,2) DEFAULT NULL,\n  `Net` decimal(10,2) DEFAULT NULL,\n  `Bonus` decimal(10,2) DEFAULT NULL,\n  `Bonus2` decimal(10,2) DEFAULT NULL,\n  `Miles` decimal(10,2) DEFAULT NULL,\n  `Leads` decimal(10,2) DEFAULT NULL,\n  `Cell` decimal(10,2) DEFAULT NULL,\n  `401KPC` decimal(10,2) DEFAULT NULL,\n  `SS` decimal(10,2) DEFAULT NULL,\n  `Med` decimal(10,2) DEFAULT NULL,\n  `Fed` decimal(10,2) DEFAULT NULL,\n  `State` decimal(10,2) DEFAULT NULL,\n  `Roth` decimal(10,2) DEFAULT NULL,\n  `DPPO_F` decimal(10,2) DEFAULT NULL,\n  `HSA_FE` decimal(10,2) DEFAULT NULL,\n  `MD25F` decimal(10,2) DEFAULT NULL,\n  `VIS_F` decimal(10,2) DEFAULT NULL,\n  PRIMARY KEY (`Pay_Date`),\n  UNIQUE KEY `pay_date_UNIQUE` (`Pay_Date`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'
+
+
+
+To Create login_attempts TABLE
+CREATE TABLE login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45),
+    attempts INT DEFAULT 0,
+    last_attempt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

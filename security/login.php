@@ -1,7 +1,5 @@
 <?php
-//echo '<pre>'; // Optional: to format the output
-//print_r($_SESSION);
-//echo '</pre>';
+
 // Check if a session is not already started before calling session_start
 if (session_status() == PHP_SESSION_NONE) {
     ini_set('session.gc_maxlifetime', 1800);
@@ -11,7 +9,26 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 
-$error = ''; // Initialize error variable
+// For monitoring logins and blocking
+require_once '../security/monitor_logins.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $password = $_POST['password'] ?? '';
+    
+    if ($password === $stored_password) {
+        $_SESSION['authenticated'] = true;
+        $_SESSION['last_activity'] = time();
+        resetLoginAttempts($ipAddress); // Reset on successful login
+        header('Location: ../default.php');
+        exit;
+    } else {
+        recordLoginAttempt($ipAddress);
+        if ($ipReleased == false) {
+            $error .= '<span id="invalid_password">Invalid password. Please try again.</span>';
+    
+        }
+    }
+}
 
 // Check for the 's' parameter in the URL
 if (isset($_GET['s'])) {
@@ -31,18 +48,6 @@ if (isset($_GET['s'])) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $password = $_POST['password'] ?? '';
-    
-    if ($password === $stored_password) {
-        $_SESSION['authenticated'] = true;
-        $_SESSION['last_activity'] = time();
-        header('Location: ../default.php');
-        exit;
-    } else {
-        $error = '<span id="invalid_password">Invalid password. Please try again.</span>';
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -75,20 +80,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="my-3">
                     <?php echo "<br/>" . $session_error; ?>
                 </div>
-            <?php endif; ?>
+            <?php endif;
+            if ($showLogin && $showLogin == true) {
+            ?>
 
-            <span id="enterbuttonspan"><button id="enter-button" class="btn btn-primary" onclick="showPasswordBox()">ENTER</button></span>
+                <span id="enterbuttonspan"><button id="enter-button" class="btn btn-primary" onclick="showPasswordBox()">ENTER</button></span>
 
-            <div id="password-container">
-                <form action="login.php" method="POST">
-                    <label for="password" title="Enter Password!"><i class="fas fa-key fa-2x"></i></label>
-                    <input type="password" id="password" name="password" title="Enter Password!" required autofocus placeholder="Enter Password">
-                    <button type="submit" id="submit-button"><i class="fas fa-arrow-circle-right"></i></button>
-                </form>
-                <br/>
-            </div>
-            <br/><br/>
-            <?php if (isset($error)) : ?>
+                <div id="password-container">
+                    <form action="login.php" method="POST">
+                        <label for="password" title="Enter Password!"><i class="fas fa-key fa-2x"></i></label>
+                        <input type="password" id="password" name="password" title="Enter Password!" required autofocus placeholder="Enter Password">
+                        <button type="submit" id="submit-button"><i class="fas fa-arrow-circle-right"></i></button>
+                    </form>
+                    <br/>
+                </div>
+                <br/><br/>
+            <?php 
+            } else {
+                echo '<span id="enterbuttonspan"></span>';
+            }
+
+            if (isset($error) && $error != "") : ?>
                 <p id="auth_error"><?php echo $error; ?></p>
             <?php endif; ?>
         </div>
@@ -100,9 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 const enterButton = document.getElementById('enter-button');
                 enterButton.style.display = 'none'; // Hide the button
 
-                // Fade in the title
-                //const title = document.getElementById('main-title');
-                //title.style.opacity = 1; // Set opacity to 1
 
                 const enterbuttonspan = document.getElementById('enterbuttonspan');
                 enterbuttonspan.style.opacity = 1; // Set opacity to 1
@@ -110,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Show and fade in the password container
                 const passwordContainer = document.getElementById('password-container');
                 passwordContainer.style.display = 'block'; // Make it visible
+
                 setTimeout(() => {
                     passwordContainer.style.opacity = 1; // Set opacity to 1 after the display change
                     document.getElementById('password').focus(); // Set focus on the password field
@@ -118,8 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Show the title with a delay
             window.onload = () => {
-                //const title = document.getElementById('main-title');
-                //title.style.opacity = 1; // Fade in title on load
                 const enterbuttonspan = document.getElementById('enterbuttonspan');
                 enterbuttonspan.style.opacity = 1; // Fade in title on load
 
@@ -129,7 +137,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         sessionAlert.style.display = 'none'; // Hide the alert after 7 seconds
                     }, 7000); // 7000 milliseconds = 7 seconds
                 }
+
+                const authError = document.getElementById('auth_error');
+                if (authError) {
+                    setTimeout(() => {
+                        authError.style.display = 'none'; // Hide the alert after 7 seconds
+                    }, 5000); // 5000 milliseconds = 5 seconds
+                }
             };
+            
         </script>
         </body>
 </html>
