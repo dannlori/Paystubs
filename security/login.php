@@ -54,7 +54,7 @@ if (isset($_GET['s'])) {
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Login</title>
+        <title>Paystubs Security Login</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">  
         <!-- Font Awesome CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -107,6 +107,10 @@ if (isset($_GET['s'])) {
             <?php endif; ?>
         </div>
 
+        <div class="disclaimer">
+            <p>By logging in, you agree to our <a href="/terms.php" target="_blank">Terms of Service</a> and <a href="/privacy.php" target="_blank">Privacy Policy</a>.</p>
+        </div>
+        
         <script src="../js/background.js"></script>
         <script>
             function showPasswordBox() {

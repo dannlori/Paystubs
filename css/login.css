@@ -1,3 +1,11 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh; /* Makes the body take the full height of the viewport */
+    margin: 0;
+}
+
 #main-title {
     font-family: 'Playfair Display', serif; /* Use the fancy font */
     font-size: 8rem; /* Larger font size */
@@ -25,6 +33,7 @@
     opacity: 0; /* Start hidden */
     transition: opacity 2s ease; /* Fade transition */
 }
+
 #password {
     border-radius: 10px;
     padding: 15px;
@@ -32,6 +41,7 @@
     width: 300px;
     font-size: 24px;
 }
+
 #submit-button {
     border-radius: 8px;
     padding: 12px 24px;
@@ -41,9 +51,11 @@
     font-size: 24px;
     cursor: pointer;
 }
+
 #submit-button:hover {
     background-color: #45a049;
 }
+
 #enter-button {
     font-family: 'Playfair Display', serif; /* Apply the fancy font */
     font-size: 24px; /* Larger font size */
@@ -53,10 +65,28 @@
     color: white; /* Button text color */
     transition: background-color 0.3s; /* Transition for hover effect */
 }
+
 #enter-button:hover {
     background-color: #45a049; /* Darker shade on hover */
 }
+
 #enterbuttonspan {
     opacity: 0; /* Start hidden */
     transition: opacity 2s ease; /* Fade transition */
+}
+
+.disclaimer {
+    margin: 15px 0;
+    font-size: 0.9em;
+    color: #555;
+    text-align: center;
+}
+
+.disclaimer a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.disclaimer a:hover {
+    text-decoration: underline;
 }

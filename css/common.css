@@ -21,6 +21,7 @@ body, html {
     background-size: cover; /* Cover the entire area */
     background-position: center; /* Center the image */
     z-index: -1; /* Make sure it stays in the background */
+    opacity: 90%;
 }
 
 .content {
