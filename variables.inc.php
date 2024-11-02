@@ -1,6 +1,4 @@
 <?php
-
-
 $directory = 'c:\\paystubs'; // Directory containing PDF files
 $processedDirectory = $directory . '\\processed\\'; // Append the 'processed' directory
 // Define the path for the not processed directory
