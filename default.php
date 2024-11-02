@@ -36,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <?php
+
+        
         // Defining Variables
         require_once "variables.inc.php";
 
@@ -310,16 +312,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo = null; // Close the database connection
 
-        // Function to extract a value using a regular expression
-        function extractValue($text, $pattern) {
-            if (preg_match($pattern, $text, $match)) {
-                // Remove commas from the matched value
-                $number = str_replace(',', '', $match[1]);
-                return floatval($number);
-            } else {
-                return 0.0; // Set default value if not found
-            }
-        }
         ?>
         <div id="uploadForm" class="floating-upload">
             <span class="close-btn" onclick="hideuploadForm()" title="Hide window">×</span>

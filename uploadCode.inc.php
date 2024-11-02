@@ -1,14 +1,5 @@
 <?php
-// Function to extract all matches for a regex pattern
-function extractAllValues($text, $pattern) {
-    preg_match_all($pattern, $text, $matches);
-    return isset($matches[1]) ? $matches[1] : [];
-}
-
-// Function to sum values in an array
-function sumValues($values) {
-    return array_sum(array_map('floatval', $values));
-}
+require_once "functions.php";
 
 // Get the total number of PDF files
 $pdfFiles = glob("$directory\\*.pdf");
