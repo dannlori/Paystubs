@@ -1,4 +1,15 @@
 <?php
+// Function to extract all matches for a regex pattern
+function extractAllValues($text, $pattern) {
+    preg_match_all($pattern, $text, $matches);
+    return isset($matches[1]) ? $matches[1] : [];
+}
+
+// Function to sum values in an array
+function sumValues($values) {
+    return array_sum(array_map('floatval', $values));
+}
+
 // Get the total number of PDF files
 $pdfFiles = glob("$directory\\*.pdf");
 $totalFiles = count($pdfFiles);
@@ -122,6 +133,36 @@ foreach ($pdfFiles as $index => $pdfPath) {
         'gross' => extractValue($text, '/Totals(?:\s+[\d.]+)?\s+\$([\d,]+\.\d{2})/'),
         'net' => extractValue($text, '/Net Wages\s+\$([\d,]+\.\d{2})/'),
         'roth' => extractValue($text, '/ROTH%\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
+        'bonus' => sumValues(extractAllValues($text, '/BONUS\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/')),
+        'bonus2' => sumValues(extractAllValues($text, '/BONUS2\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/')),
+        'miles' => extractValue($text, '/MILES\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
+        'leads' => extractValue($text, '/LEADS\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
+        'cell' => extractValue($text, '/CELL\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
+        '401kpc' => extractValue($text, '/401KPC\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
+        'ss' => extractValue($text, '/SS\s+\$([\d,]+\.\d{2})/'),
+        'med' => extractValue($text, '/MED\s+\$([\d,]+\.\d{2})/'),
+        'fed' => extractValue($text, '/Federal\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/'),
+        'state' => extractValue($text, '/State\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/'),
+        'DPPO_F' => extractValue($text, '/DPPO-F\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/'),
+        'HSA_FE' => extractValue($text, '/HSA-FE\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/'),
+        'MD25F' => extractValue($text, '/MD25F\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/'),
+        'VIS_F' => extractValue($text, '/VIS-F\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/')
+    );
+
+
+/*
+    // Extract information using regular expressions
+    $pdfInfo = array(
+        'co' => "LOC",
+        'pay_date' => pathinfo($pdfPath, PATHINFO_FILENAME),
+        'rate' => extractValue($text, '/HRLY\s+\$([\d,]+\.\d{2})(?=\s+[\d,]*\.\d{2}|$)/'),
+        'reg' => extractValue($text, '/HRLY\s+\$[\d,]+\.\d{2}\s+([\d.]+)\s+\$/'),
+        'ot' => extractValue($text, '/OT\s+\$[\d,]+\.\d{2}\s+([\d.]+)\s+\$/'),
+        'pto' => extractValue($text, '/PTO\s+\$[\d,]+\.\d{2}\s+([\d.]+)\s+\$/') + extractValue($text, '/SICK\s+\$[\d,]+\.\d{2}\s+([\d.]+)\s+\$/'),
+        'hol' => extractValue($text, '/HOL\s+\$[\d,]+\.\d{2}\s+([\d.]+)\s+\$/'),
+        'gross' => extractValue($text, '/Totals(?:\s+[\d.]+)?\s+\$([\d,]+\.\d{2})/'),
+        'net' => extractValue($text, '/Net Wages\s+\$([\d,]+\.\d{2})/'),
+        'roth' => extractValue($text, '/ROTH%\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
         'bonus' => extractValue($text, '/BONUS\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
         'bonus2' => extractValue($text, '/BONUS2\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
         'miles' => extractValue($text, '/MILES\s+\$([\d,]+\.\d{2})(?=\s+\$|\s*$)/'),
@@ -137,7 +178,7 @@ foreach ($pdfFiles as $index => $pdfPath) {
         'MD25F' => extractValue($text, '/MD25F\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/'),
         'VIS_F' => extractValue($text, '/VIS-F\s+\$([\d,]+\.\d{2})\s+\$[\d,]+\.\d{2}/')
     );
-
+*/
     // Check if the pay_date already exists in the database
     $checkSql = "SELECT COUNT(*) FROM paystubs WHERE pay_date = :pay_date";
     $checkStmt = $pdo->prepare($checkSql);
