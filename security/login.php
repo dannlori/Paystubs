@@ -7,14 +7,15 @@ if (session_status() == PHP_SESSION_NONE) {
     $_SESSION['authenticated'] = false;
 
 }
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $password = $_POST['password'] ?? '';
+}
 require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
 
 // For monitoring logins and blocking
 require_once '../security/monitor_logins.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $password = $_POST['password'] ?? '';
-    
     if ($password === $stored_password) {
         $_SESSION['authenticated'] = true;
         $_SESSION['last_activity'] = time();
@@ -47,7 +48,6 @@ if (isset($_GET['s'])) {
             break;
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -76,11 +76,7 @@ if (isset($_GET['s'])) {
         <div class="container text-center content">
 
             <!-- Display the alert message if it exists -->
-            <?php if (!empty($session_error)) : ?>
-                <div class="my-3">
-                    <?php echo "<br/>" . $session_error; ?>
-                </div>
-            <?php endif;
+            <?php 
             if ($showLogin && $showLogin == true) {
             ?>
 
@@ -99,7 +95,13 @@ if (isset($_GET['s'])) {
             } else {
                 echo '<span id="enterbuttonspan"></span>';
             }
-
+            
+            // Display the alert message if it exists 
+            if (!empty($session_error)) : ?>
+                <div class="my-3">
+                    <?php echo "<br/>" . $session_error; ?>
+                </div>
+            <?php endif;
             if (isset($error) && $error != "") : ?>
                 <p id="auth_error"><?php echo $error; ?></p>
             <?php endif; ?>
@@ -147,5 +149,5 @@ if (isset($_GET['s'])) {
             };
             
         </script>
-        </body>
+    </body>
 </html>
