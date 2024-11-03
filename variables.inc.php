@@ -22,7 +22,6 @@ if (file_exists($credentialsFile)) {
     // Assign credentials to variables
     $dbUsername = $dbCredentials['username'];
     $dbPassword = $dbCredentials['password'];
-
 } else {
     die('Error: Credentials file not found.');
 }
@@ -74,5 +73,4 @@ $totals = [
     'HSA_FE' => 0,
     'MD25F' => 0,
     'VIS_F' => 0
-]; 
-
+];

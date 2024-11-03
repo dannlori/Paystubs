@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,13 @@
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/terms.css">
 </head>
+
 <body>
     <div class="background"></div>
     <div class="container">
         <h1>Terms of Service</h1>
         <p>Effective Date: November 2, 2024</p>
-        
+
         <h2>1. Acceptance of Terms</h2>
         <p>By accessing or using our services, you agree to be bound by these Terms of Service.</p>
 
@@ -38,5 +40,6 @@
         <p>If you have any questions about these terms, please contact us at dnconsultants at gmail.com.</p>
     </div>
 </body>
+
 </html>
 <script src="js/background.js"></script>

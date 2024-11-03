@@ -1,6 +1,7 @@
 <?php
 // Function to extract a value using a regular expression
-function extractValue($text, $pattern) {
+function extractValue($text, $pattern)
+{
     if (preg_match($pattern, $text, $match)) {
         // Remove commas from the matched value
         $number = str_replace(',', '', $match[1]);
@@ -10,12 +11,14 @@ function extractValue($text, $pattern) {
     }
 }
 // Function to extract all matches for a regex pattern
-function extractAllValues($text, $pattern) {
+function extractAllValues($text, $pattern)
+{
     preg_match_all($pattern, $text, $matches);
     return isset($matches[1]) ? $matches[1] : [];
 }
 
 // Function to sum values in an array
-function sumValues($values) {
+function sumValues($values)
+{
     return array_sum(array_map('floatval', $values));
 }

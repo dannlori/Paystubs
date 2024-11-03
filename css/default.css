@@ -1,6 +1,6 @@
 #make_selection {
-    text-align:center;
-    vertical-align: baseline ;
+    text-align: center;
+    vertical-align: baseline;
     font-size: 24px;
 }
 
@@ -28,26 +28,33 @@
 
 /* Scrollable container */
 .table-wrapper {
-    max-height: 700px; /* Adjust height as needed */
-    overflow-y: auto;  /* Enable vertical scrolling */
+    max-height: 700px;
+    /* Adjust height as needed */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
     width: max-content;
 }
 
 thead th {
     position: sticky;
-    top: 0; /* Fix the header at the top */
+    top: 0;
+    /* Fix the header at the top */
     /* background-color: #f8f9fa; /* Add background to prevent overlap */
     background-color: coral;
-    z-index: 1; /* Ensure it stays on top */
+    z-index: 1;
+    /* Ensure it stays on top */
 }
 
 .message {
-    transition: opacity 1s ease; /* 1 second fade out effect */
-    opacity: 1; /* Fully visible */
+    transition: opacity 1s ease;
+    /* 1 second fade out effect */
+    opacity: 1;
+    /* Fully visible */
 }
 
 .message.fade-out {
-    opacity: 0; /* Fully transparent */
+    opacity: 0;
+    /* Fully transparent */
 }
 
 /* Floating div in the top right corner */
@@ -63,9 +70,12 @@ thead th {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     cursor: move;
     z-index: 1000;
-    resize: none; /* Prevent resizing */
-    overflow: hidden; /* Prevent scrollbars */
-    opacity: 0.85; /* Semi-transparent */
+    resize: none;
+    /* Prevent resizing */
+    overflow: hidden;
+    /* Prevent scrollbars */
+    opacity: 0.85;
+    /* Semi-transparent */
 }
 
 /* Close button */
@@ -83,7 +93,8 @@ thead th {
 }
 
 #sessionAlert {
-    display: none; /* Initially hidden */
+    display: none;
+    /* Initially hidden */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -93,13 +104,16 @@ thead th {
     padding: 20px;
     z-index: 1000;
     opacity: 1;
-    transition: opacity 1s; /* Transition for fading */
-    border-radius: 10px; /* Rounded corners */
+    transition: opacity 1s;
+    /* Transition for fading */
+    border-radius: 10px;
+    /* Rounded corners */
 }
 
 #closeAlert {
     cursor: pointer;
     float: right;
     font-size: 20px;
-    line-height: 20px; /* Center the close button vertically */
+    line-height: 20px;
+    /* Center the close button vertically */
 }

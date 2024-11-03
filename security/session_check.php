@@ -15,8 +15,8 @@ if (isset($_SESSION['last_activity'])) {
                 'Authenticated' => $_SESSION['authenticated'] ?? null,
                 'Elapsed_time' => $elapsed_time . ' seconds' ?? null,
                 'lastActivity' => $_SESSION['last_activity']
-                ]
-            ]);
+            ]
+        ]);
         session_unset();     // Unset session variables
         session_destroy();   // Destroy the session
         exit;
@@ -34,5 +34,5 @@ if (isset($_SESSION['last_activity'])) {
     ]);
 } else {
     // If not logged in
-    echo json_encode(['status' => 'not_logged_in' ]);
+    echo json_encode(['status' => 'not_logged_in']);
 }

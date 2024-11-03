@@ -2,25 +2,30 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh; /* Makes the body take the full height of the viewport */
+    height: 100vh;
+    /* Makes the body take the full height of the viewport */
     margin: 0;
 }
 
 #main-title {
-    font-family: 'Playfair Display', serif; /* Use the fancy font */
-    font-size: 8rem; /* Larger font size */
+    font-family: 'Playfair Display', serif;
+    /* Use the fancy font */
+    font-size: 8rem;
+    /* Larger font size */
     color: white;
-    opacity: 0; /* Start hidden */
-    transition: opacity 2s ease; /* Fade transition */
+    opacity: 0;
+    /* Start hidden */
+    transition: opacity 2s ease;
+    /* Fade transition */
 }
 
 #auth_error {
-    color:rgb(222, 101, 101);
+    color: rgb(222, 101, 101);
     border: 3px;
     background-color: black;
-    border-radius:5px;
-    width:fit-content;
-    padding:10px;
+    border-radius: 5px;
+    width: fit-content;
+    padding: 10px;
     margin: 0 auto;
     text-align: center;
     font-weight: bolder;
@@ -29,9 +34,12 @@ body {
 }
 
 #password-container {
-    display: none; /* Initially hidden */
-    opacity: 0; /* Start hidden */
-    transition: opacity 2s ease; /* Fade transition */
+    display: none;
+    /* Initially hidden */
+    opacity: 0;
+    /* Start hidden */
+    transition: opacity 2s ease;
+    /* Fade transition */
 }
 
 #password {
@@ -57,22 +65,32 @@ body {
 }
 
 #enter-button {
-    font-family: 'Playfair Display', serif; /* Apply the fancy font */
-    font-size: 24px; /* Larger font size */
-    padding: 12px 30px; /* Increased padding */
-    border: none; /* Remove border */
-    background-color: #4CAF50; /* Button color */
-    color: white; /* Button text color */
-    transition: background-color 0.3s; /* Transition for hover effect */
+    font-family: 'Playfair Display', serif;
+    /* Apply the fancy font */
+    font-size: 24px;
+    /* Larger font size */
+    padding: 12px 30px;
+    /* Increased padding */
+    border: none;
+    /* Remove border */
+    background-color: #4CAF50;
+    /* Button color */
+    color: white;
+    /* Button text color */
+    transition: background-color 0.3s;
+    /* Transition for hover effect */
 }
 
 #enter-button:hover {
-    background-color: #45a049; /* Darker shade on hover */
+    background-color: #45a049;
+    /* Darker shade on hover */
 }
 
 #enterbuttonspan {
-    opacity: 0; /* Start hidden */
-    transition: opacity 2s ease; /* Fade transition */
+    opacity: 0;
+    /* Start hidden */
+    transition: opacity 2s ease;
+    /* Fade transition */
 }
 
 .disclaimer {

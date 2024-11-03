@@ -8,7 +8,6 @@ if (file_exists($credentialsFile)) {
     // Assign credentials to variables
     $dbUsername = $dbCredentials['username'];
     $dbPassword = $dbCredentials['password'];
-
 } else {
     die('Error: Credentials file not found.');
 }
@@ -23,20 +22,23 @@ $options = array(
 $pdo = new PDO($dsn, $username, $password_db, $options);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-function recordLoginAttempt($ip) {
+function recordLoginAttempt($ip)
+{
     global $pdo;
     $stmt = $pdo->prepare("INSERT INTO login_attempts (ip_address, attempts) VALUES (?, 1) ON DUPLICATE KEY UPDATE attempts = attempts + 1, last_attempt = NOW()");
     $stmt->execute([$ip]);
 }
 
-function getLoginAttempts($ip) {
+function getLoginAttempts($ip)
+{
     global $pdo;
     $stmt = $pdo->prepare("SELECT attempts, last_attempt FROM login_attempts WHERE ip_address = ?");
     $stmt->execute([$ip]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function resetLoginAttempts($ip) {
+function resetLoginAttempts($ip)
+{
     global $pdo;
     $stmt = $pdo->prepare("DELETE FROM login_attempts WHERE ip_address = ?");
     $stmt->execute([$ip]);
@@ -54,7 +56,7 @@ $ipReleased = false;
 if ($loginAttempts) {
     $attempts = $loginAttempts['attempts'];
     $lastAttemptTime = strtotime($loginAttempts['last_attempt']);
-    
+
 
     if ($attempts >= $maxAttempts) {
         // Check if the lockout duration has passed
@@ -71,4 +73,3 @@ if ($loginAttempts) {
         }
     }
 }
-

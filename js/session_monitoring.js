@@ -2,7 +2,7 @@
 function checkSession() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "security/session_check.php", true);
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             if (response.status === 'timeout') {
@@ -21,7 +21,7 @@ function checkSession() {
 setInterval(checkSession, 322000);
 
 // Show the custom alert after 290 seconds (290,000 milliseconds)
-setTimeout(function() {
+setTimeout(function () {
     const alertBox = document.getElementById("sessionAlert");
     alertBox.style.display = "block"; // Show the alert
 
@@ -29,14 +29,14 @@ setTimeout(function() {
     const countdownElement = document.getElementById("countdown");
 
     // Update the countdown every second
-    const countdownInterval = setInterval(function() {
+    const countdownInterval = setInterval(function () {
         countdownElement.textContent = timeLeft; // Update the displayed time
         timeLeft--;
 
         if (timeLeft < 0) {
             clearInterval(countdownInterval); // Stop the countdown
             alertBox.style.opacity = 0; // Start fading out
-            setTimeout(function() {
+            setTimeout(function () {
                 alertBox.style.display = "none"; // Hide the alert after fading out
             }, 1000); // Wait for the fade effect to complete
         }
@@ -44,10 +44,10 @@ setTimeout(function() {
 
     // Close button functionality
     const closeButton = document.getElementById("closeAlert");
-    closeButton.onclick = function() {
+    closeButton.onclick = function () {
         clearInterval(countdownInterval); // Clear the countdown interval
         alertBox.style.opacity = 0; // Start fading out
-        setTimeout(function() {
+        setTimeout(function () {
             alertBox.style.display = "none"; // Hide the alert after fading out
         }, 1000); // Wait for the fade effect to complete
     };

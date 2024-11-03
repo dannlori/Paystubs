@@ -80,11 +80,11 @@ foreach ($pdfFiles as $index => $pdfPath) {
         $justfilename = basename($pdfPath);
         $destination = $notProcessedDirectory . $justfilename;
         rename($pdfPath, $destination);
-        ?>
+?>
         <div class="message alert alert-warning">
-            <?=$justfilename?> has already been processed. Moved to not processed folder.<br/>
+            <?= $justfilename ?> has already been processed. Moved to not processed folder.<br />
         </div>
-        <?php
+    <?php
         continue;
     }
 
@@ -97,16 +97,16 @@ foreach ($pdfFiles as $index => $pdfPath) {
 
     if ($text === null) {
     ?>
-        Error running pdftotext command: <?=$pdfPath?> <br/>
-        Command: <?=$command?><br/><br/>  <!-- Output the actual command for debugging -->
-    <?php    
+        Error running pdftotext command: <?= $pdfPath ?> <br />
+        Command: <?= $command ?><br /><br /> <!-- Output the actual command for debugging -->
+        <?php
         // Move to not processed folder
         $justfilename = basename($pdfPath);
         $destination = $notProcessedDirectory . $justfilename;
         rename($pdfPath, $destination);
-    ?>
+        ?>
         <div class="message alert alert-danger">
-        Failed to extract text from <?=$justfilename?>. Moved to not processed folder.<br/>
+            Failed to extract text from <?= $justfilename ?>. Moved to not processed folder.<br />
         </div>
     <?php
         continue;
@@ -141,7 +141,7 @@ foreach ($pdfFiles as $index => $pdfPath) {
     );
 
 
-/*
+    /*
     // Extract information using regular expressions
     $pdfInfo = array(
         'co' => "LOC",
@@ -177,20 +177,20 @@ foreach ($pdfFiles as $index => $pdfPath) {
 
     // Fetch the count of records with the same pay_date
     $existingCount = $checkStmt->fetchColumn();
-    
+
     // If the pay_date exists, skip the insertion and move the file
-if ($existingCount > 0) {
-    // Move to not processed folder
-    $justfilename = basename($pdfPath);
-    $destination = $notProcessedDirectory . $justfilename;
-    rename($pdfPath, $destination);
+    if ($existingCount > 0) {
+        // Move to not processed folder
+        $justfilename = basename($pdfPath);
+        $destination = $notProcessedDirectory . $justfilename;
+        rename($pdfPath, $destination);
     ?>
-    <div class="message alert alert-warning">
-        The pay date <?=$pdfInfo['pay_date']?> already exists. Moved <?=$justfilename?> to not processed folder.<br/>
-    </div>
+        <div class="message alert alert-warning">
+            The pay date <?= $pdfInfo['pay_date'] ?> already exists. Moved <?= $justfilename ?> to not processed folder.<br />
+        </div>
     <?php
-    continue; // Skip to the next file
-}
+        continue; // Skip to the next file
+    }
 
     // Execute the prepared statement to insert data into the database
     $stmt->execute($pdfInfo);
@@ -204,15 +204,15 @@ if ($existingCount > 0) {
     if (rename($source, $destination)) {
     ?>
         <div class="message alert alert-success">
-            <?=$justfilename?> moved from <?=dirname($source)?>  to <?=$processedDirectory?> successfully!<br/>
+            <?= $justfilename ?> moved from <?= dirname($source) ?> to <?= $processedDirectory ?> successfully!<br />
         </div>
 
     <?php
     } else {
     ?>
         <div class="message alert alert-danger">
-            Failed to move the <?=$justfilename?> from <?=dirname($source)?> to <?=$processedDirectory?><br/>
+            Failed to move the <?= $justfilename ?> from <?= dirname($source) ?> to <?= $processedDirectory ?><br />
         </div>
-    <?php
+<?php
     }
 }

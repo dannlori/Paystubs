@@ -1,15 +1,18 @@
 .container {
     max-width: 800px;
     margin: auto;
-    background: #fff; /* White background for the content area */
+    background: #fff;
+    /* White background for the content area */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     opacity: 90%;
 }
 
-h1, h2 {
-    color: #333; /* Dark text color for headings */
+h1,
+h2 {
+    color: #333;
+    /* Dark text color for headings */
 }
 
 h1 {

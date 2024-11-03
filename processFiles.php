@@ -6,7 +6,7 @@ $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
 // Check if the uploaded file is a PDF
 if (isset($_FILES["fileToUpload"])) {
-    if($fileType == "pdf") {
+    if ($fileType == "pdf") {
         $uploadOk = 1;
     } else {
         echo "Sorry, only PDF files are allowed.";
@@ -31,7 +31,7 @@ if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.";
 } else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        echo "The file ". htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) ." has been uploaded.";
+        echo "The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.";
         echo "<br/>PROCESSING...<br/>";
 ?>
         <script>
