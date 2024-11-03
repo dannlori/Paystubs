@@ -30,7 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/default.css">
-
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 
     <form id="yearForm" method="POST" action="">
         <input type="hidden" name="selectedYear" id="hiddenYearInput" value="">
@@ -82,18 +85,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Header section with dropdown, centered text and logout button -->
     <header class="header py-1">
         <div class="container">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="col-4">
                     <select id="yearDropdown" onchange="selectYear()">
                         <option value="">Select Year</option>
                         <option value="all">ALL YEARS</option>
                     </select>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <h1 class="mb-0"><?= $submittedYearText ?></h1>
                 </div>
+                <div class="col-4">
+
+                </div>
                 <!-- Logout button aligned to the right -->
-                <div class="col-3">
+                <div class="col-4 text-right">
                     <a href="security/logout.php" class="btn btn-danger">Logout</a>
                 </div>
             </div>
