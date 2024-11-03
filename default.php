@@ -363,8 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
 
-            <
-            !--JavaScript to fade out all messages one by one-- >
+            //JavaScript to fade out all messages one by one
 
             window.onload = function() {
                 var messages = document.getElementsByClassName('message');
