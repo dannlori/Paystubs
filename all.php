@@ -12,9 +12,9 @@ require_once 'c:\\inetpub\\wwwroot\\paystubs_resources\\config.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Paystubs</title>
     <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
+    <link rel='stylesheet' href='css/playfair_google_font.css'>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/all.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
