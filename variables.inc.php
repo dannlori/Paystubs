@@ -8,8 +8,8 @@ $popplerExe = "C:\\poppler\\pdftotext.exe ";
 $noFiles = 0;
 $ColumnsWithoutDollarSignsCells = [1, 2, 4, 5, 6, 7];
 $ColumnsWithoutDollarSignsTotals = [1, 2, 3, 4];
-$ColumnswithNegativeValues = [17, 18, 19, 20, 21, 22, 23, 24];
-$ColumnswithNegativeTotals = [14, 15, 16, 17, 18, 19, 20, 21];
+$ColumnswithNegativeValues = [18, 19, 20, 21, 22, 23, 24, 25];
+$ColumnswithNegativeTotals = [15, 16, 17, 18, 19, 20, 21, 22];
 $previous_monitor_year = "";
 
 // Path to the file containing the database credentials
@@ -65,6 +65,7 @@ $totals = [
     'Leads' => 0,
     'Cell' => 0,
     '401KPC' => 0,
+    '401ER' => 0,
     'SS' => 0,
     'Med' => 0,
     'Fed' => 0,

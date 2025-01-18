@@ -127,7 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     Miles, 
                     Leads, 
                     Cell,
-                    401KPC, 
+                    401KPC,
+                    401ER, 
                     SS,
                     Med, 
                     Fed,
@@ -229,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 $dateTime = new DateTime($cell);
                                                 $formattedDate = $dateTime->format('m-d-Y'); // Format as month-day-year (US format)
                                         ?>
-                                                <td><?= htmlspecialchars($formattedDate) ?></td>
+                                                <td><a href="/pdf/<?=$cell?>.pdf" target="_blank" style="text-decoration:none" title="Click to see Paystub"><?= htmlspecialchars($formattedDate) ?></a></td>
                                             <?php
                                                 // If this column is not supposed to have a dollar sign (based on your logic)
                                             } elseif (in_array($ColumnNum, $ColumnsWithoutDollarSignsCells)) {
